@@ -1,12 +1,19 @@
-FROM node:18
+FROM node:20
 
 WORKDIR /app
 
-COPY package*.json
+COPY package*.json ./
 
-RUN npm run install
+RUN npm install
 
 COPY . .
 
+# Ensure the logs directory exists
+RUN mkdir -p logs
+
+# Generate Prisma client
+RUN npx prisma generate --schema=prisma/schema.prisma
+
 EXPOSE 3000
-CMD ["node", "index.js"]
+
+CMD ["npm", "run", "dev"]
