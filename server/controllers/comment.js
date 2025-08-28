@@ -23,7 +23,9 @@ export const comment = async (req, res, next) => {
         blog: { connect: { id: Number(blogId) } },
         author: { connect: { id: userId } }
       },
-      include: { author: true }
+      include: { author: {
+        select: { id: true, username: true, email: true, role: true }
+      } }
     });
 
     successResponse(res, 201, "Comment successfully created", comment)

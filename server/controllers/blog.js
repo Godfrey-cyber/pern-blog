@@ -45,7 +45,13 @@ export const createBlog = async (req, res, next) => {
 
 // @GET - get all blogs
 export const blogs = async (req, res, next) => {
+  const cacheKey = "blogs:all";
   try {
+    const cachedBlogs = await redis.get(cacheKey);
+    if (cachedBlogs) {
+      const blogs = JSON.parse(cachedBlogs);
+      return successResponse(res, 200, "Blog successfully fetched (from cache)", blogs);
+    }
     const blogs = await prisma.blog.findMany({
       include: { 
         authorID: false,
@@ -59,9 +65,10 @@ export const blogs = async (req, res, next) => {
         }, 
       },
     });
-    if (!blogs) {
+    if (!blogs || blogs.length === 0) {
       return errorResponse(res, 404, "Blogs not found")
     }
+    await redis.set(cacheKey, JSON.stringify(blogs), "EX", 60);
     return successResponse(res, 200, "Blog successfully fetched", blogs)
   } catch (error) {
     next(error)
@@ -69,6 +76,12 @@ export const blogs = async (req, res, next) => {
 };
 // @GET - get my blogs
 export const myBlogs = async (req, res, next) => {
+  const cacheKey = `myblogs:${req.userId}`;
+  const cachedBlogs = await redis.get(cacheKey);
+  if (cachedBlogs) {
+    const blogs = JSON.parse(cachedBlogs);
+    return successResponse(res, 200, "Blog successfully fetched (from cache)", blogs);
+  }
   try {
     const blogs = await prisma.blog.findMany({ 
       where: { authorID: Number(req.userId) },
@@ -84,6 +97,10 @@ export const myBlogs = async (req, res, next) => {
         }, 
       },
     })
+    if (!blogs || blogs.length === 0) {
+      return errorResponse(res, 404, "Blogs not found")
+    }
+    await redis.set(cacheKey, JSON.stringify(blogs), "EX", 60);
     return successResponse(res, 200, "Your Blogs successfully fetched", blogs)
   } catch (error) {
     console.log(error)
