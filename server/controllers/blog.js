@@ -6,6 +6,7 @@ import { errorResponse, successResponse } from "../utiles/response.js"
 // @POST - create a blog
 export const createBlog = async (req, res, next) => {
   const { description, title, content, categoryID } = req.body;
+  const cacheKey = "blogs:all";
   try {
     if (!description || !title || !content || !categoryID) {
       return errorResponse(res, 400, "All fields are required")
@@ -37,6 +38,7 @@ export const createBlog = async (req, res, next) => {
         category: { select: { id: true, title: true, slug: true } }
       }
     });
+    await redis.del(cacheKey);
     return successResponse(res, 201, "Blog created successfully", blog)
   } catch (error) {
     next(error)
@@ -52,6 +54,7 @@ export const blogs = async (req, res, next) => {
       const blogs = JSON.parse(cachedBlogs);
       return successResponse(res, 200, "Blog successfully fetched (from cache)", blogs);
     }
+
     const blogs = await prisma.blog.findMany({
       include: { 
         authorID: false,
