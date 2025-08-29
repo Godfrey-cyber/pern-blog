@@ -35,3 +35,23 @@ export const createCategory = async (req, res, next) => {
     next(error)
   }
 };
+
+// @GET - get all categories
+export const categories = async (req, res, next) => {
+  const cacheKey = "categories:all";
+  try {
+    const cachedCategories = await redis.get(cacheKey);
+    if (cachedCategories) {
+      const categories = JSON.parse(cachedCategories);
+      return successResponse(res, 200, "Category successfully fetched (from cache)", categories);
+    }
+    const categories = await prisma.category.findMany();
+    if (!categories || categories.length === 0) {
+      return errorResponse(res, 404, "Categories not found")
+    }
+    await redis.set(cacheKey, JSON.stringify(categories), "EX", 60);
+    return successResponse(res, 200, "Category successfully fetched", categories)
+  } catch (error) {
+    next(error)
+  }
+};

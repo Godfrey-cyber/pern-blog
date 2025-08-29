@@ -126,20 +126,7 @@ export const updateBlog = async (req, res, next) => {
         title,
         description,
         content
-      },
-      // include: { 
-      //   author: {
-      //     select: {
-      //       id: true,
-      //       username: true,
-      //       email: true,
-      //       role: true
-      //     }
-      //   }, 
-      // },
-      // omit: {
-      //   authorID: true
-      // }
+      }
     })
     await redis.del(`blog:${updatedBlog.id}`);
     return successResponse(res, 200, "Blog successfully updated", updatedBlog)
