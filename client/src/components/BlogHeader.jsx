@@ -1,6 +1,7 @@
 import React from 'react'
 import { MdOutlineChevronLeft, MdOutlineChevronRight } from 'react-icons/md';
-import { IoMdGlobe, IoMdSearch } from "react-icons/io";
+import { RxHamburgerMenu } from "react-icons/rx";
+import { IoMdSearch } from "react-icons/io";
 import { useNavigate, Link } from 'react-router-dom';
 
 const BlogHeader = () => {
@@ -20,7 +21,7 @@ const BlogHeader = () => {
 			</div>
 			<div className="flex space-x-5 items-center">
 				<IoMdSearch className="nav-icon" /> 
-				<IoMdGlobe className="nav-icon" /> 
+				<RxHamburgerMenu className="nav-icon" /> 
 			</div>
 		</nav>
 	)
