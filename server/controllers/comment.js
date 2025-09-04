@@ -1,8 +1,9 @@
 import { prisma } from "../models/prismaClient.js"
 import { redis } from "../redis/redisClient.js"
-import { publisher } from "../redis/pubSub.js"
+import { publishNewComment } from "../redis/publisher.js"
 import { errorResponse, successResponse } from "../utiles/response.js"
 
+const publisher = redis
 export const comment = async (req, res, next) => {
   const { content } = req.body;
   const { blogId } = req.params;
@@ -29,12 +30,9 @@ export const comment = async (req, res, next) => {
         select: { id: true, username: true, email: true, role: true }
       } }
     });
-    // Publish to Redis
-    await publisher.publish(
-      "new-comment",
-      JSON.stringify(comment)
-    );
     await redis.del(`comments:${blogId}`);
+    // Publish to Redis
+    await publishNewComment(comment)
     successResponse(res, 201, "Comment successfully created", comment)
   } catch (error) {
     next(error);

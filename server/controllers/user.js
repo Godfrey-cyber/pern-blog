@@ -54,13 +54,19 @@ export const login = async (req, res, next) => {
 
 
 export const users = async (req, res, next) => {
+  const cacheKey = "users:all";
   try {
+    const cachedUsers = await redis.get(cacheKey);
+    if (cachedUsers) {
+      const users = JSON.parse(cachedUsers);
+      return successResponse(res, 200, "Users successfully fetched (from cache)", users);
+    }
     const users = await prisma.user.findMany({
       select: { id: true, username: true, email: true, role: true, password: false },
     });
-    if (!users) return res.status(404).json({ error: 'User not found' });
-
-    res.status(200).json(users);
+    if (!users) return errorResponse(res, 404, 'User not found');
+    await redis.set(cacheKey, JSON.stringify(users), "EX", 60);
+    return successResponse(res, 200, "Users successfully fetched", users)
   } catch (error) {
     next(error)
   }

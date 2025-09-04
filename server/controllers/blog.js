@@ -1,8 +1,10 @@
 import { prisma } from "../models/prismaClient.js"
 import { redis } from "../redis/redisClient.js"
+import { publishNewBlog, publishUpdatedBlog } from "../redis/publisher.js"
 import slugify from 'slugify'
 import { errorResponse, successResponse } from "../utiles/response.js"
 
+const publisher = redis;
 // @POST - create a blog
 export const createBlog = async (req, res, next) => {
   const { description, title, content, categoryID } = req.body;
@@ -39,6 +41,8 @@ export const createBlog = async (req, res, next) => {
       }
     });
     await redis.del(cacheKey);
+    // await publisher.publish("new-blog", JSON.stringify(blog));
+    await publishNewBlog(blog);
     return successResponse(res, 201, "Blog created successfully", blog)
   } catch (error) {
     next(error)
@@ -68,8 +72,8 @@ export const blogs = async (req, res, next) => {
         }, 
       },
     });
-    if (!blogs || blogs.length === 0) {
-      return errorResponse(res, 404, "Blogs not found")
+    if (!blogs) {
+      return errorResponse(res, 404, "No blogs found")
     }
     await redis.set(cacheKey, JSON.stringify(blogs), "EX", 60);
     return successResponse(res, 200, "Blog successfully fetched", blogs)
@@ -106,7 +110,6 @@ export const myBlogs = async (req, res, next) => {
     await redis.set(cacheKey, JSON.stringify(blogs), "EX", 60);
     return successResponse(res, 200, "Your Blogs successfully fetched", blogs)
   } catch (error) {
-    console.log(error)
     next(error)
   }
 }
@@ -131,7 +134,8 @@ export const updateBlog = async (req, res, next) => {
         content
       }
     })
-    await redis.del(`blog:${updatedBlog.id}`);
+    await redis.del(cacheKey);
+    await publishUpdatedBlog(updatedBlog);
     return successResponse(res, 200, "Blog successfully updated", updatedBlog)
   } catch (error) {
     next(error)
