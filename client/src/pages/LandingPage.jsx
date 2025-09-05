@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { axiosInstance } from '../utilities/utiles.js';
 import LoadingBlog from "../components/LoadingBlog.jsx"
 import BlogHeader from "../components/BlogHeader.jsx"
+import FrontPage from "../components/FrontPage.jsx"
+import Feed from "../components/Feed.jsx"
 import { fetchBlogs } from "../services/blogService.js"
 
 const LandingPage = () => {
@@ -30,6 +32,8 @@ const LandingPage = () => {
 	return (
 		<div className="flex flex-col w-full h-screen w-full">
 			<BlogHeader />
+			<FrontPage />
+			<Feed />
 			{/*<div className="flex flex-col w-full items-center justify-center px-5 md:px-10 lg:px-20">
 				<p className="text-center font-bold text-green-700">LandingPage Page</p>
 				<div className="flex flex-col items-center justify-center prose">
