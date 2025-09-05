@@ -13,7 +13,7 @@ const BlogHeader = () => {
 				<img src="https://www.shutterstock.com/image-vector/blog-writing-line-icon-web-600nw-2366232875.jpg" alt="" className="h-18 w-18 object-cover" />
 			</span>
 		</Link>
-			<div className="flex space-x-3 items-center">
+			<div className="hidden md:flex space-x-3 items-center">
 				<p className="nav-list">MARKET</p>
 				<p className="nav-list">LEADERS</p>
 				<p className="nav-list">CAREERS</p>
