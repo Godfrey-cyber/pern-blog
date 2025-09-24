@@ -6,7 +6,10 @@ import { FaRegUserCircle } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 // files
 // import { loginUser } from "../services/userService.js"
+import { useDispatch, useSelector } from 'react-redux';
+import { loginStart, loginFailure, loginSuccess } from '../redux/userSlice.js';
 import { axiosInstance } from "../utilities/utiles.js"
+import { loginUser } from "../redux/authThunk.js"
 
 const Login = () => {
 	const navigate = useNavigate();
@@ -14,54 +17,27 @@ const Login = () => {
 		email: '',
 		password: '',
 	});
+	const dispatch = useDispatch()
 	const [toggle, setToggle] = useState(false);
 	const { email, password  } = loginData;
-	// const { user, loading, error, accessToken } = useSelector(
-	// 	state => state.auth
-	// );
+	const { user, loading, error, accessToken } = useSelector(state => state.auth);
 
 	// console.log(user);
 	const onChange = event => {
-		setLoginData(prev => ({
-			...prev,
-			[event.target.name]: event.target.value,
-		}));
+		const { name, value } = event.target;
+		setLoginData((prev) => ({ ...prev, [name]: value }));
 	};
-
-	const handleSubmit = async event => {
+	console.log(user)
+	const resetForm = () => setLoginData({ email: "", password: "" });
+	const handleSubmit = (event) => {
 		event.preventDefault();
-		// dispatch(signUpStart());
-		if (email !== "" || password !== "") {
-			try {
-				const res = await axiosInstance.post(
-					'/users/login',
-					loginData
-				);
-				if (res.status === 200 || res.statusText === 'OK') {
-					// dispatch(signUpSuccess(res.data));
-					setLoginData({
-						email: '',
-						password: '',
-					});
-					navigate('/');
-					toast.success("Successfully Logged in🥇")
-				}
-				console.log(res);
-			} catch (error) {
-				if (error || !res.status === 200 || !res.statusText === 'OK') {
-					// dispatch(signUpFailure(err?.response?.data.msg));
-					setLoginData({
-						email: '',
-						password: '',
-					});
-					toast.error(error?.response?.data?.msg)
-				}
-			}
-		} else {
-			toast.error('Sorry! • Cannot log you without credentials')
-			console.log('error');
-		}
-	};
+		if (email && password) {
+	    dispatch(loginUser({ email, password }, navigate, toast));
+	    resetForm();
+	  } else {
+	    toast.error("Sorry! Cannot log you without credentials");
+	  }
+	}
 	return (
 		<div className="flex flex-col w-full h-screen items-center justify-center">
 			<div className="reg-div relative">
@@ -96,14 +72,19 @@ const Login = () => {
 							// disabled={loading}
 							className="bg-orange-400 text-white rounded-md text-xs font-semibold w-full h-12 px-3 py-2 cursor-pointer"
 						>
-							SUBMIT
+							{loading ? "Logging..." : "Log In"}
 					</button>
 				</form>
-				<div className="flex items-center text-sm text-gray-400 justify-self-center">
+				<div className="flex items-center text-xs text-gray-400 justify-self-center">
 					Don't have an account?
 					<Link to="/auth/register">
-						<span className="cursor-pointer text-orange-400 transition-all delay-200 ml-2">
+						<span className="cursor-pointer text-xs text-orange-400 transition-all delay-200 ml-2">
 						Create Account
+						</span>
+					</Link>
+					<Link to="/auth/forgot-password">
+						<span className="cursor-pointer text-xs text-orange-400 transition-all delay-200 ml-2">
+						Forgot Password?
 						</span>
 					</Link>
 				</div>

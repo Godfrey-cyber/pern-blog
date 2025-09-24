@@ -18,10 +18,9 @@ const Register = () => {
 		username: '',
 	});
 	const [toggle, setToggle] = useState(false);
-	const { email, password, username,  } = signUpData;
-	// const { user, loading, error, accessToken } = useSelector(
-	// 	state => state.auth
-	// );
+	const { email, password, username } = signUpData;
+	const [errors, setErrors] = useState({});
+	const { user, loading, error, accessToken } = useSelector(state => state.auth);
 
 	// console.log(user);
 	const onChange = event => {
@@ -29,47 +28,46 @@ const Register = () => {
 			...prev,
 			[event.target.name]: event.target.value,
 		}));
+		setErrors({ ...errors, [event.target.name]: "" });
+	};
+
+	const validate = () => {
+	    let newErrors = {};
+
+	    if (!username.trim()) {
+	      newErrors.username = "Username is required.";
+	    }
+
+	    if (!email.trim()) {
+	      newErrors.email = "Email is required.";
+	    } else if (!/\S+@\S+\.\S+/.test(email)) {
+	      newErrors.email = "Please enter a valid email address.";
+	    }
+
+	    if (!password.trim()) {
+	      newErrors.password = "Password is required.";
+	    } else if (password.length < 6) {
+	      newErrors.password = "Password must be at least 6 characters.";
+	    }
+
+	    return newErrors;
 	};
 	console.log(signUpData);
-	const handleSubmit = async event => {
+	const handleSubmit = async (event) => {
 		event.preventDefault();
-		// dispatch(signUpStart());
-		if (email !== "" || password !== "" || username !== "") {
-			try {
-				const res = await axiosInstance.post(
-					'/users/signup',
-					signUpData
-				);
-				if (res.status === 201 || res.statusText === 'OK') {
-					// dispatch(signUpSuccess(res.data));
-					setSignUpData({
-						email: '',
-						password: '',
-						username: '',
-					});
-					navigate('/auth/login');
-					toast.success("Successfully Logged in🥇")
-				}
-				console.log(res);
-			} catch (error) {
-				if (error || !res.status === 200 || !res.statusText === 'OK') {
-					// dispatch(signUpFailure(err?.response?.data.msg));
-					setSignUpData({
-						email: '',
-						password: '',
-						username: '',
-					});
-					toast.error(error?.response?.data?.msg)
-				}
-			}
-		} else {
-			toast.error('Sorry! • Cannot log you without credentials')
-			console.log('error', error);
-		}
-	};
+		const validationErrors = validate();
+
+		if (Object.keys(validationErrors).length > 0) {
+	      setErrors(validationErrors);
+	      return;
+	    }
+
+	    dispatch(signUpUser(signUpData, navigate, toast));
+	    setSignUpData({ email: "", password: "", username: "" });
+	    setErrors({});
+	}
 	return (
 		<div className="flex flex-col w-full h-screen items-center justify-center">
-			
 			<div className="reg-div relative">
 				{/*<FaRegUserCircle className="signup-icon" /> */}
 				<p className="flex text-2xl font-light text-gray-800 flex items-center p-2">Create a new account.</p>
@@ -84,6 +82,9 @@ const Register = () => {
 							placeholder="User Name e.g. Jane"
 							className="form-input"
 						/>
+						{errors.username && (
+			              <p className="text-red-500 text-xs mt-1">{errors.username}</p>
+			            )}
 					</span>
 					<span className="input-span">
 						<input
@@ -95,6 +96,9 @@ const Register = () => {
 							placeholder="Email e.g. jane.doe@gmail.com"
 							className="form-input"
 						/>
+						{errors.email && (
+			              <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+			            )}
 					</span>
 					<span className="input-span">
 						<input
@@ -106,15 +110,19 @@ const Register = () => {
 							placeholder="Password"
 							className="form-input"
 						/>
+						{errors.password && (
+			              <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+			            )}
 					</span>
 					<button 
 							onClick={handleSubmit}
 							type="submit"
-							// disabled={loading}
+							disabled={loading}
 							className="bg-orange-400 text-white rounded-md text-xs font-semibold w-full h-12 px-3 py-2 cursor-pointer"
 						>
-							SUBMIT
+							{loading ? "Signing up..." : "Sign Up"}
 					</button>
+					{error && <p className="error">{error}</p>}
 				</form>
 				<div className="flex items-center text-sm text-gray-400 justify-self-center">
 					Already have an account?

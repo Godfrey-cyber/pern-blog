@@ -1,10 +1,42 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+// import { fetchBlogs } from "../services/blogService.js"
+import { formatDate } from "../utilities/utiles.js"
+import { fetchBlogs } from "../redux/blogThunk.js"
+import { useDispatch, useSelector } from "react-redux"
 
 const Feed = () => {
+	// const [blogs, setBlogs] = useState([]);
+	const { blogs, loading, error } = useSelector(state => state.blog);
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+	    const controller = new AbortController();
+	    dispatch(fetchBlogs())
+	    return () => controller.abort();
+	  }, []);
+	if (loading) return <p>Loading blogs...</p>;
 	return (
-		<div className="flex flex-col justify-center items-center w-full h-96 px-5 md:px-10 lg:px-20 my-8">
-			<p className="text-sm font-bold text-black">Your Blogs appear here</p>
-		</div>
+		<>
+			{blogs?.slice(0, 5).map(({id, slug, createdAt, title, description}) => (
+				<Link to={`/blog/${slug}/${id}`} key={id || slug} className="feed">
+					<div className="grid grid-cols-12 gap-4 rounded-md">
+						<img src="https://assets.citizen.digital/157412/conversions/Parliament-thumbnail.webp" alt="" className="col-span-6 h-64 object-fit" />
+						<div className="col-span-6 flex flex-col space-y-4">
+							<span className="flex items-center flex-row space-x-3">
+								<p className="text-sm font-semibold text-amber-500">SPORTS</p>
+								<p className="text-sm font-light text-black">{formatDate(createdAt)}</p>
+							</span>
+							<span className="flex flex-col space-y-3">
+								<p className="text-2xl font-bold text-black">{title}</p>
+								<p className="text-sm font-normal text-black">{description}</p>
+							</span>
+						</div>
+					</div>
+				</Link>
+			))}
+		</>
 	)
 }
 
