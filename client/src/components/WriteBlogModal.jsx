@@ -5,20 +5,23 @@ import { ToastContainer, toast } from 'react-toastify';
 import { uploadBlog } from "../redux/blogThunk.js"
 import { useSelector, useDispatch } from "react-redux"
 import { axiosInstance } from "../utilities/utiles.js"
+import axios from "axios"
 
 export default function WriteBlogModal({ isOpen, onClose }) {
   const [blogData, setBlogData] = useState({
 		title: '',
 		description: '',
 		content: '',
+		image: '',
 		categoryID: ''
 	});
   const [categories, setCategories] = useState([])
   const [categoryId, setCategoryId] = useState([])
-  const dispatch = useDispatch()
+  const [uploading, setUploading] = useState(false);
   const [toggle, setToggle] = useState(false);
-  const { title, description, content, categoryID } = blogData;
   const [errors, setErrors] = useState({});
+  const dispatch = useDispatch()
+  const { title, description, content, image, categoryID } = blogData;
   const { user } = useSelector(state => state.auth);
 
   
@@ -36,14 +39,43 @@ export default function WriteBlogModal({ isOpen, onClose }) {
 	    content: value,
 	    }));
 	  };
+	  console.log(import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET)
+	  console.log(import.meta.env.VITE_CLOUDINARY_NAME)
+	// image upload 
+	const handleImageUpload = async (event) => {
+		const file = event.target.files[0]; // 👈 take first file
+  		if (!file) return;
+	  setUploading(true);
+	  try {
+	    const formData = new FormData();
+	    formData.append("file", file);
+	    formData.append("upload_preset", import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
+
+	    const { data } = await axios.post(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_NAME}/image/upload`,formData);
+
+	    setBlogData((prev) => ({
+	      ...prev,
+	      image: data.secure_url, // save Cloudinary URL
+	    }));
+	  } catch (err) {
+	    toast.error("Image upload failed");
+	    console.error(err);
+	  } finally {
+	    setUploading(false);
+	  }
+	};
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
-    dispatch(uploadBlog(blogData, toast));
-    setBlogData({ title: "", description: "", content: "", categoryID: "" });
+  	event.preventDefault();
+  	const payload = {
+	    ...blogData,
+	    categoryID: parseInt(blogData.categoryID, 10),
+	  };
+    dispatch(uploadBlog(payload, toast));
+    setBlogData({ title: "", description: "", content: "", image: "", categoryID: "" });
     // setErrors({});
   };
-
+  
   // categories
   useEffect(() => {
     const getCategories = async () => {
@@ -98,19 +130,40 @@ export default function WriteBlogModal({ isOpen, onClose }) {
           />
           <select
 			name="categoryID"
-			value={parseInt(categoryID, 10)}
+			value={categoryID}
 			onChange={onChange}
 			className="text-sm font-normal text-gray-600 w-full p-3 border border-gray-500 rounded-lg focus:outline-none focus:ring focus:border-green-500"
 			required
 			>
 			  <option value="">-- Select Category --</option>
 	            {categories?.map((cat) => (
-	              <option key={cat.id} value={parseInt(cat.id, 10)}>
+	              <option key={cat.id} value={cat.id}>
 	                {cat.title}
 	              </option>
 	            ))}
 			</select>
-
+			{/* Image */}
+			<input
+	            type="file"
+	            accept="image/*"
+				multiple
+				id="name"
+	            name="image"
+	            placeholder="Enter blog image..."
+	            onChange={handleImageUpload}
+	            className="text-sm font-normal text-gray-600 w-full p-3 border border-gray-500 rounded-lg focus:outline-none focus:ring focus:border-green-500"
+	            required
+	        />
+	        {uploading && <p className="text-sm text-blue-500">Image Uploading...</p>}
+	        {image && (
+            <div className="flex gap-2">
+              <img
+                src={image}
+                alt="preview"
+                className="w-32 h-32 object-cover rounded"
+              />
+            </div>
+          )}
           {/* Rich Text Editor */}
           <div className="flex-1 overflow-y-auto">
             <ReactQuill

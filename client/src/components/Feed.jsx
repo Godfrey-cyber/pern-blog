@@ -19,10 +19,10 @@ const Feed = () => {
 	if (loading) return <p>Loading blogs...</p>;
 	return (
 		<>
-			{blogs?.slice(0, 5).map(({id, slug, createdAt, title, description}) => (
+			{blogs?.slice(0, 5).map(({id, slug, createdAt, title, description, image}) => (
 				<Link to={`/blog/${slug}/${id}`} key={id || slug} className="feed">
 					<div className="grid grid-cols-12 gap-4 rounded-md">
-						<img src="https://assets.citizen.digital/157412/conversions/Parliament-thumbnail.webp" alt="" className="col-span-6 h-64 object-fit" />
+						<img src={image} alt="" className="col-span-6 h-64 object-fit" />
 						<div className="col-span-6 flex flex-col space-y-4">
 							<span className="flex items-center flex-row space-x-3">
 								<p className="text-sm font-semibold text-amber-500">SPORTS</p>

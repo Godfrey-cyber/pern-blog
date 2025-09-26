@@ -28,7 +28,7 @@ const BlogPost = () => {
 			<div className="grid grid-cols-12 gap-4 lg:gap-8 px-5 md:px-10 lg:px-20 my-28">
 				<div className="col-span-8 flex flex-col space-y-4">
 					<p className="text-3xl font-bold text-black hover:text-amber-500">{blog.title}.</p>
-					<img src="https://assets.citizen.digital/158317/conversions/Untitled-design-%2850%29-mainStory.webp" alt="" className="h-80 min-h-[350px] max-h-[400px] object-cover" />
+					<img src={blog.image} alt="" className="h-80 min-h-[350px] max-h-[400px] object-cover" />
 					<div className="flex flex-row space-x-3 my-4">
 						<span className="flex flex-col items-center justify-center w-10 h-10 rounded-full bg-gray-200 border-2 border-amber-500 text-lg font-semibold text-gray-400">{blog?.author?.username?.split(" ")[0].charAt(0)}</span>
 						<span className="flex flex-col space-y-1">
