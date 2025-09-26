@@ -30,4 +30,25 @@ export const fetchBlogById = (id) => async dispatch => {
 // @Delete blog
 
 // @Write blog
+export const uploadBlog = (uploadData, toast) => async dispatch => {
+  dispatch(blogStart());
+  try {
+    const res = await axiosInstance.post("/blogs/write-blog", uploadData);
+    dispatch(blogSuccess(res.data.data));
+    toast.success("Successfully Uploaded the blog🥇");
+  } catch (error) {
+    dispatch(blogFailure(error?.response?.data?.msg || "Failed to upload blog"));
+    toast.error(error?.response?.data?.msg || "Upload failed. Try again.");
+  }
+}
 
+
+// export const fetchCategories = () => async dispatch => {
+//   dispatch(categoryStart())
+//   try {
+//     const res = await axiosInstance.get("categories/get-categories");
+//     dispatch(categorySuccess(res.data.data))
+//   } catch (error) {
+//     dispatch(categoryFailure(error?.response?.data?.msg || "Failed to fetch blog"));
+//   }
+// };

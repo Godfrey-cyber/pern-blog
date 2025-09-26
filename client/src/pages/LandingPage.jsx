@@ -13,6 +13,7 @@ import { fetchBlogs } from "../redux/blogThunk.js"
 import { useDispatch, useSelector } from "react-redux"
 
 const LandingPage = () => {
+	const [isModalOpen2, setIsModalOpen2] = useState(false);
 	const { blogs, loading, error } = useSelector(state => state.blog);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -24,7 +25,7 @@ const LandingPage = () => {
 	if (loading) return <p>Loading blog...</p>;
 	return (
 		<div className="flex flex-col w-full h-screen w-full">
-			<BlogHeader />
+			<BlogHeader setIsModalOpen2={setIsModalOpen2}/>
 			<FrontPage />
 			<Feed />
 			<Footer />

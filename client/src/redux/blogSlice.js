@@ -48,10 +48,27 @@ const blogSlice = createSlice({
 			state.isFetching = false;
 			state.success = false;
 		},
+		// create blog
+		createBlogStart: (state) => {
+	      state.isFetching = true;
+	      state.error = null;
+	      state.success = false;
+	    },
+	    createBlogSuccess: (state, action) => {
+	      state.isFetching = false;
+	      state.blogs.push(action.payload); // add new blog to list
+	      state.success = true;
+	      state.error = null;
+	    },
+	    createBlogFailure: (state, action) => {
+	      state.isFetching = false;
+	      state.error = action.payload;
+	      state.success = false;
+	    },
 	},
 });
 
-export const { blogStart, blogSuccess, blogFailure, blogsStart, blogsSuccess, blogsFailure } = blogSlice.actions;
+export const { blogStart, blogSuccess, blogFailure, blogsStart, blogsSuccess, blogsFailure, createBlogStart, createBlogSuccess, createBlogFailure } = blogSlice.actions;
 export const selectBlog = state => state.blog.blog;
 
 export default blogSlice.reducer;

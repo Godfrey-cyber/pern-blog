@@ -36,7 +36,7 @@ const BlogPost = () => {
 							<p className="text-gray-700 font-semibold text-xs ">Published on {blog && formatDate(blog.createdAt)}</p>
 						</span>
 					</div>
-					<div className="flex flex-col space-y-3 text-sm leading-8 font-normal text-gray-800">{blog.content}</div>
+					<div className="flex flex-col space-y-3 text-sm leading-8 font-normal text-gray-800" dangerouslySetInnerHTML={{ __html: blog.content }} />
 				</div>
 				<div className="col-span-3 flex flex-col p-4 h-full rounded-md">
 					<p className="text-black font-bold p-3">TRENDING NOW</p>

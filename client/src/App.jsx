@@ -36,8 +36,6 @@ function App() {
     dispatch(refreshUser());
   }, [dispatch, isAuthenticated]);
 
-  console.log(blog)
-
   return (
     <section className="min-h-screen font-['Montserrat'] scroll-smooth w-full overflow-x-hidden">
       <ToastContainer />

@@ -14,7 +14,6 @@ import { useSelector } from "react-redux"
 const Dashboard = () => {
 	const navigate = useNavigate();
 	const { user, loading, error, accessToken } = useSelector(state => state.auth);
-	console.log(user)
 	return (
 		<div className="grid grid-cols-12 w-screen relative max-h-screen">
 			<DashSideBar />

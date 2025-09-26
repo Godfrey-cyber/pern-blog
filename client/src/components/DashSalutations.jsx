@@ -1,14 +1,23 @@
-import React from 'react'
+import React, { useState } from "react";
 import { useSelector } from "react-redux"
-// import { selectUser } from "../Redux/slices/userSlice.js"
+import WriteBlogModal from "./WriteBlogModal.jsx"
 
 const DashSalutations = () => {
-	// const user = useSelector(selectUser)
+	const [isModalOpen, setIsModalOpen] = useState(false);
 	const { user, loading, error, accessToken } = useSelector(state => state.auth);
 	return (
-		<div className="flex flex-col my-2 space-y-1 px-6 mt-24">
-			<p className="text-2xl lg:text-lg text-black font-bold">Hi, {user?.username.split(" ")[0]} 👋,</p>
-			<p className="text-lg lg:text-sm text-gray-400 font-semibold">There are no blogs so far</p>
+		<div className="flex flex-row items-center justify-between my-2 space-y-1 px-6 mt-24">
+			<div className="">
+				<p className="text-2xl lg:text-lg text-black font-bold">Hi, {user?.username.split(" ")[0]} 👋,</p>
+				<p className="text-lg lg:text-sm text-gray-400 font-semibold">There are no blogs so far</p>
+			</div>
+			{user?.role === "ADMIN" && <div className="">
+				<button onClick={() => setIsModalOpen(true)} className="bg-green-600 px-4 py-3 text-sm rounded-md font-semibold text-white cursor-pointer">Add Blog</button>
+			</div>}
+			<WriteBlogModal
+		        isOpen={isModalOpen}
+		        onClose={() => setIsModalOpen(false)}
+		    />
 		</div>
 	)
 }
