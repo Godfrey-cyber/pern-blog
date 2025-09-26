@@ -5,10 +5,10 @@ import { errorResponse, successResponse } from "../utiles/response.js"
 
 // @POST - create a blog
 export const createBlog = async (req, res, next) => {
-  const { description, title, content, categoryID } = req.body;
+  const { description, title, content, categoryID, image } = req.body;
   const cacheKey = "blogs:all";
   try {
-    if (!description || !title || !content || !categoryID) {
+    if (!description || !title || !content || !categoryID || !image) {
       return errorResponse(res, 400, "All fields are required")
     }
     if (!req.userId) {
@@ -20,7 +20,7 @@ export const createBlog = async (req, res, next) => {
     if (existingSlug) {
       return errorResponse(res, 409, "🚫 A blog with this title already exists")
     }
-    const existingCategory = await prisma.category.findUnique({ where: { id: categoryID } });
+    const existingCategory = await prisma.category.findUnique({ where: { id: parseInt(categoryID, 10) } });
     if (!existingCategory) {
       return errorResponse(res, 404, "Category not found");
     }
@@ -29,9 +29,10 @@ export const createBlog = async (req, res, next) => {
         description,
         title,
         content,
+        image,
         slug,
         author: { connect: { id: req.userId } },
-        category: { connect: { id: categoryID } }
+        category: { connect: { id: parseInt(categoryID, 10) } }
       },
       include: {
         author: { select: { id: true, username: true, email: true, role: true } },
@@ -56,6 +57,10 @@ export const blogs = async (req, res, next) => {
     }
 
     const blogs = await prisma.blog.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 6,
       include: { 
         authorID: false,
         author: {

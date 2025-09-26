@@ -36,6 +36,7 @@ model Blog {
   title         String
   description   String
   content       String
+  image         String?
   authorID      Int?
   author        User?         @relation(fields: [authorID], references: [id])
   categoryID    Int?
@@ -43,6 +44,10 @@ model Blog {
   comments      Comment[]
   slug          String        @unique
   createdAt     DateTime      @default(now())
+
+  @@index([title])
+  @@index([categoryID])
+  @@index([createdAt])
 }
 
 model Comment {
