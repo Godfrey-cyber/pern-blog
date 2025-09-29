@@ -1,15 +1,14 @@
 import { prisma } from "../models/prismaClient.js"
-import { redis } from "../redis/redisClient.js"
-import { publisher } from "../redis/pubSub.js"
+import { publisher, redisClient } from "../redis/redisClient.js"
 import { errorResponse, successResponse } from "../utiles/response.js"
 
 export const comment = async (req, res, next) => {
-  const { content } = req.body;
+  const { comment } = req.body;
   const { blogId } = req.params;
   const userId = req.userId; // Set by your authentication middleware
 
   try {
-    if (!content) {
+    if (!comment) {
       return errorResponse(res, 400, "Content not found.")
     }
     
@@ -21,7 +20,7 @@ export const comment = async (req, res, next) => {
 
     const comment = await prisma.comment.create({
       data: {
-        content,
+        comment,
         blog: { connect: { id: Number(blogId) } },
         author: { connect: { id: userId } }
       },
@@ -34,7 +33,7 @@ export const comment = async (req, res, next) => {
       "new-comment",
       JSON.stringify(comment)
     );
-    await redis.del(`comments:${blogId}`);
+    await redisClient.del(`comments:${blogId}`);
     successResponse(res, 201, "Comment successfully created", comment)
   } catch (error) {
     next(error);
@@ -45,7 +44,7 @@ export const commentsByBlog = async (req, res, next) => {
 	const { id } = req.params;
   const cacheKey = `comments:${id}`;
 	try {
-    const cached = await redis.get(cacheKey);
+    const cached = await redisClient.get(cacheKey);
     if (cached) {
       return res.json(JSON.parse(cached));
     }
@@ -57,7 +56,7 @@ export const commentsByBlog = async (req, res, next) => {
       } }
     });
      // Cache result in Redis for 1 hour
-    await redis.set(cacheKey, JSON.stringify(comments), 'EX', 3600);
+    await redisClient.set(cacheKey, JSON.stringify(comments), 'EX', 3600);
     successResponse(res, 200, "Comment fetched successfully", comments)
   } catch (error) {
     next(error);

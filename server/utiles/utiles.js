@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken'
 import crypto from 'crypto'
-import { redis } from "../redis/redisClient.js"
+import { redisClient } from "../redis/redisClient.js"
+import Redis from "ioredis"
 
 //Create Access Token
 export const createAccessToken = (userId) => {
@@ -19,20 +20,23 @@ export const createRefreshToken = (userId, tokenId) => {
 export const randomTokenId = () => {
   return crypto.randomBytes(32).toString('hex');
 }
-
+// const redisClient = new Redis(process.env.REDIS_URL || "redis://localhost:6379")
 export const rateLimit = async(req, res, next) => {
-	const ip = req.ip;
-  const key = `ratelimit:${ip}`;
-  const requests = await redis.incr(key);
+  try {
+    const ip = req.ip;
+    const key = `ratelimit:${ip}`;
+    const requests = await redisClient.incr(key);
 
-  if (requests === 1) {
-    await redis.expire(key, 60); // 1 min window
+    if (requests === 1) {
+      await redisClient.expire(key, 60); // 1 min window
+    }
+    if (requests > 10) {
+      return res.status(429).json({ error: "Too many requests, slow down!" });
+    }
+    next()
+  } catch (error) {
+    console.error("Rate Limit Error:", error)
   }
-
-  if (requests > 10) {
-    return res.status(429).json({ error: "Too many requests, slow down!" });
-  }
-
   next();
 }
 

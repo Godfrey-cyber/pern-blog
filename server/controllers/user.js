@@ -1,8 +1,7 @@
-// const prisma = require('../models/prismaClient');
 import bcrypt from "bcryptjs"
 import { prisma } from "../models/prismaClient.js"
 import { Role } from "@prisma/client"
-import { redis } from "../redis/redisClient.js"
+import { redisClient, publisher } from "../redis/redisClient.js"
 import jwt from "jsonwebtoken"
 import { createAccessToken, createRefreshToken, randomTokenId } from "../utiles/utiles.js"
 import { successResponse, errorResponse } from "../utiles/response.js"
@@ -28,18 +27,18 @@ export const login = async (req, res, next) => {
       return res.status(400).json({ msg: '❌ Please fill in all fields' })
     }
     const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) return errorResponse(res, 404, "User not found")
+    if (!user) return res.status(400).json({ msg: '❌ User not found' })
 
     const match = await bcrypt.compare(password, user.password);
-    if (!match) return errorResponse(res, 401, "Invalid credentials")
-
+    if (!match) return res.status(400).json({ msg: '❌ Invalid credentials' })
+      
     // Generate tokens
     const tokenId = randomTokenId();
     const accessToken = createAccessToken(user.id)
     const refreshToken = createRefreshToken(user.id, tokenId)
 
     const { password: _, ...userSafe } = user;
-    await redis.set(`refresh:${user.id}:${tokenId}`, '1', 'EX', 7 * 24 * 60 * 60); // 7 days in s
+    await redisClient.set(`refresh:${user.id}:${tokenId}`, '1', 'EX', 7 * 24 * 60 * 60); // 7 days in s
     res.cookie('refreshToken', refreshToken, {
       path: '/',
       httpOnly: true,
@@ -47,7 +46,7 @@ export const login = async (req, res, next) => {
       sameSite: 'Strict',
       secure: process.env.NODE_ENV === 'production',
     })
-    res.status(200).json({ user: userSafe, accessToken });
+    return res.status(200).json({ user: userSafe, accessToken });
   } catch (error) {
     next(error)
   }
@@ -78,7 +77,7 @@ export const logout = async (req, res, next) => {
     const payload = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
 
     // Delete from Redis
-    await redis.del(`refresh:${payload.userId}:${payload.tokenId}`);
+    await redisClient.del(`refresh:${payload.userId}:${payload.tokenId}`);
 
     // Clear cookie
     res.clearCookie("refreshToken", {
@@ -113,7 +112,7 @@ export const refresh = async(req, res, next) => {
       return errorResponse(res, 400, "No user found");
     }
     // @Check if token exists in cache
-    const exists = await redis.get(`refresh:${payload.userId}:${payload.tokenId}`);
+    const exists = await redisClient.get(`refresh:${payload.userId}:${payload.tokenId}`);
     if (!exists) {
       return errorResponse(res, 400, `No refresh token in cache or it is invalid - ${payload.userId} - ${exists} - ${payload.tokenId}`);
     }
@@ -123,8 +122,8 @@ export const refresh = async(req, res, next) => {
     const refreshToken = createRefreshToken(payload.userId, tokenId);
 
     // Delete old refresh and store new one
-    await redis.del(`refresh:${payload.userId}:${payload.tokenId}`);
-    await redis.set(`refresh:${payload.userId}:${tokenId}`, '1', 'EX', 7 * 24 * 60 * 60);
+    await redisClient.del(`refresh:${payload.userId}:${payload.tokenId}`);
+    await redisClient.set(`refresh:${payload.userId}:${tokenId}`, '1', 'EX', 7 * 24 * 60 * 60);
     // @Send refreshToken
     res.cookie("refreshToken", refreshToken, {
       path: "/",

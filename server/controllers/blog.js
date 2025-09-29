@@ -1,7 +1,7 @@
 import { prisma } from "../models/prismaClient.js"
-import { redis } from "../redis/redisClient.js"
 import slugify from 'slugify'
 import { errorResponse, successResponse } from "../utiles/response.js"
+import { publisher, redisClient } from "../redis/redisClient.js"
 
 // @POST - create a blog
 export const createBlog = async (req, res, next) => {
@@ -39,7 +39,11 @@ export const createBlog = async (req, res, next) => {
         category: { select: { id: true, title: true, slug: true } }
       }
     });
-    await redis.del(cacheKey);
+    await redisClient.del(cacheKey);
+    // await publisher.publish("blog-events", JSON.stringify({
+    //   type: "NEW_BLOG",
+    //   blog,
+    // }));
     return successResponse(res, 201, "Blog created successfully", blog)
   } catch (error) {
     next(error)
@@ -50,7 +54,7 @@ export const createBlog = async (req, res, next) => {
 export const blogs = async (req, res, next) => {
   const cacheKey = "blogs:all";
   try {
-    const cachedBlogs = await redis.get(cacheKey);
+    const cachedBlogs = await redisClient.get(cacheKey);
     if (cachedBlogs) {
       const blogs = JSON.parse(cachedBlogs);
       return successResponse(res, 200, "Blog successfully fetched (from cache)", blogs);
@@ -70,13 +74,14 @@ export const blogs = async (req, res, next) => {
             email: true,
             role: true
           }
-        }, 
+        },
+        category: { select: { title: true, slug: true } } 
       },
     });
     if (!blogs || blogs.length === 0) {
       return errorResponse(res, 404, "Blogs not found")
     }
-    await redis.set(cacheKey, JSON.stringify(blogs), "EX", 60);
+    await redisClient.set(cacheKey, JSON.stringify(blogs), "EX", 60);
     return successResponse(res, 200, "Blog successfully fetched", blogs)
   } catch (error) {
     next(error)
@@ -85,7 +90,7 @@ export const blogs = async (req, res, next) => {
 // @GET - get my blogs
 export const myBlogs = async (req, res, next) => {
   const cacheKey = `myblogs:${req.userId}`;
-  const cachedBlogs = await redis.get(cacheKey);
+  const cachedBlogs = await redisClient.get(cacheKey);
   if (cachedBlogs) {
     const blogs = JSON.parse(cachedBlogs);
     return successResponse(res, 200, "Blog successfully fetched (from cache)", blogs);
@@ -102,13 +107,14 @@ export const myBlogs = async (req, res, next) => {
             email: true,
             role: true
           }
-        }, 
+        },
+        category: { select: { title: true, slug: true } },  
       },
     })
     if (!blogs || blogs.length === 0) {
       return errorResponse(res, 404, "Blogs not found")
     }
-    await redis.set(cacheKey, JSON.stringify(blogs), "EX", 60);
+    await redisClient.set(cacheKey, JSON.stringify(blogs), "EX", 60);
     return successResponse(res, 200, "Your Blogs successfully fetched", blogs)
   } catch (error) {
     console.log(error)
@@ -136,7 +142,7 @@ export const updateBlog = async (req, res, next) => {
         content
       }
     })
-    await redis.del(`blog:${updatedBlog.id}`);
+    await redisClient.del(`blog:${updatedBlog.id}`);
     return successResponse(res, 200, "Blog successfully updated", updatedBlog)
   } catch (error) {
     next(error)
@@ -149,7 +155,7 @@ export const blogByID = async (req, res, next) => {
   const cacheKey = `blog:${id}`;
   try {
     // Try fetching blogs from Redis first
-    const cached = await redis.get(cacheKey);
+    const cached = await redisClient.get(cacheKey);
     if (cached) {
       return res.json(JSON.parse(cached));
     }
@@ -164,14 +170,15 @@ export const blogByID = async (req, res, next) => {
             email: true,
             role: true
           }
-        }, 
+        },
+        category: { select: { title: true, slug: true } },  
       },
     });
     if (!blog) {
       return errorResponse(res, 404, "Blog not found")
     }
     // Cache result in Redis for 1 hour
-    await redis.set(cacheKey, JSON.stringify(blog), 'EX', 3600);
+    await redisClient.set(cacheKey, JSON.stringify(blog), 'EX', 3600);
     return successResponse(res, 200, "Blog successfully fetched", blog)
   } catch (error) {
     next(error)

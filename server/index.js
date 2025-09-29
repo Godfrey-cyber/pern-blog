@@ -23,7 +23,7 @@ app.use(morgan("combined", {
 app.use(express.json())
 app.use(sessionMiddleware)
 app.use(cookieParser())
-const allowedOrigins = ['https://alx-tour-destination.vercel.app', 'http://localhost:5173']
+const allowedOrigins = ['https://alx-tour-destination.vercel.app', 'http://localhost:5500']
 
 app.use(
   cors({

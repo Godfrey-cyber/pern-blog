@@ -1,6 +1,17 @@
 import Redis from "ioredis"
 
-export const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
+// export const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
+const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
 
-redis.on('connect', () => console.log('Connected to Redis! 💯'));
-redis.on('error', err => console.error('Redis error:', err));
+// Publisher
+export const publisher = new Redis(redisUrl);
+// Subscriber
+export const subscriber = new Redis(redisUrl);
+export const redisClient = new Redis(redisUrl)
+
+// errors
+publisher.on("error", (err) => console.error("Redis Publisher Error", err));
+subscriber.on("error", (err) => console.error("Redis Subscriber Error", err));
+redisClient.on("error", (err) => console.error("Redis Subscriber Error", err));
+
+// export { publisher, subscriber, redisClient };

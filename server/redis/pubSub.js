@@ -1,18 +1,22 @@
-import { redis } from "./redisClient.js";
-// import Redis from "ioredis"
-const publisher = redis();
-const subscriber = redis();
+import { publisher, subscriber } from "./redisClient.js";
 
-publisher.on("error", (err) => console.error("Redis Publisher Error", err));
-subscriber.on("error", (err) => console.error("Redis Subscriber Error", err));
+// Publish blog creation
+await publisher.publish("blog-events", JSON.stringify({
+  type: "NEW_BLOG",
+  blogId: 1,
+}));
 
-await subscriber.connect();
-await publisher.connect();
-
-subscriber.subscribe("new-comment", (msg) => {
-  const newComment = JSON.parse(msg);
-  console.log("New comment received:", newComment);
+// Subscribe
+subscriber.subscribe("blog-events", (err, count) => {
+  if (err) {
+    console.error("Failed to subscribe:", err);
+  } else {
+    console.log(`Subscribed to ${count} channel(s)`);
+  }
 });
 
 
-export { publisher, subscriber };
+// Listen for messages
+subscriber.on("message", (channel, message) => {
+  console.log(`Received on ${channel}:`, JSON.parse(message))
+});

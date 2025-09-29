@@ -1,11 +1,17 @@
-import session from 'express-session';
-import { RedisStore } from 'connect-redis';
-import { redis } from './redisClient.js';
+import { RedisStore } from "connect-redis"
+import session from "express-session"
+import { redisClient } from "./redisClient.js"
 
-// const RedisStore = connectRedis(session);
+// Create Redis store
+// const RedisStore = connectRedis(session)
+
+const store = new RedisStore({
+  client: redisClient,
+  prefix: "sess:",
+});
 
 export const sessionMiddleware = session({
-  store: new RedisStore({ client: redis }),
+  store,
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
@@ -13,6 +19,6 @@ export const sessionMiddleware = session({
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
     sameSite: 'lax',
-    maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+    maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
   }
 });
