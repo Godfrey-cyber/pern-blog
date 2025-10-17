@@ -3,12 +3,12 @@ import { publisher, redisClient } from "../redis/redisClient.js"
 import { errorResponse, successResponse } from "../utiles/response.js"
 
 export const comment = async (req, res, next) => {
-  const { comment } = req.body;
+  const { content } = req.body;
   const { blogId } = req.params;
   const userId = req.userId; // Set by your authentication middleware
 
   try {
-    if (!comment) {
+    if (!content) {
       return errorResponse(res, 400, "Content not found.")
     }
     
@@ -18,9 +18,9 @@ export const comment = async (req, res, next) => {
       return errorResponse(res, 404, "No blog found.")
     }
 
-    const comment = await prisma.comment.create({
+    const newComment = await prisma.comment.create({
       data: {
-        comment,
+        content,
         blog: { connect: { id: Number(blogId) } },
         author: { connect: { id: userId } }
       },
@@ -31,10 +31,10 @@ export const comment = async (req, res, next) => {
     // Publish to Redis
     await publisher.publish(
       "new-comment",
-      JSON.stringify(comment)
+      JSON.stringify(newComment)
     );
     await redisClient.del(`comments:${blogId}`);
-    successResponse(res, 201, "Comment successfully created", comment)
+    successResponse(res, 201, "Comment successfully created", newComment)
   } catch (error) {
     next(error);
   }

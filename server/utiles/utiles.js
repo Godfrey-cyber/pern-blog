@@ -33,18 +33,9 @@ export const rateLimit = async(req, res, next) => {
     if (requests > 10) {
       return res.status(429).json({ error: "Too many requests, slow down!" });
     }
-    next()
+    return next()
   } catch (error) {
     console.error("Rate Limit Error:", error)
   }
-  next();
+  // next();
 }
-
-// Simple slugify utility
-export const slugify = (text) =>
-  text
-    .toString()
-    .toLowerCase()
-    .trim()
-    .replace(/[\s\W-]+/g, "-")
-    .replace(/^-+|-+$/g, "");

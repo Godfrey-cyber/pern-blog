@@ -21,24 +21,22 @@ export const signup = async (req, res, next) => {
 };
 
 export const login = async (req, res, next) => {
+   console.log("➡️ Login route hit");
   const { email, password } = req.body;
   try {
-    if (!email || !password) {
-      return res.status(400).json({ msg: '❌ Please fill in all fields' })
-    }
+    if (!email || !password) return res.status(400).json({ msg: '❌ Please fill in all fields' })
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) return res.status(400).json({ msg: '❌ User not found' })
-
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(400).json({ msg: '❌ Invalid credentials' })
-      
+    console.log("✅ Auth successful, preparing tokens");
     // Generate tokens
     const tokenId = randomTokenId();
     const accessToken = createAccessToken(user.id)
     const refreshToken = createRefreshToken(user.id, tokenId)
-
     const { password: _, ...userSafe } = user;
     await redisClient.set(`refresh:${user.id}:${tokenId}`, '1', 'EX', 7 * 24 * 60 * 60); // 7 days in s
+    console.log("➡️ Before res.cookie, headersSent =", res.headersSent);
     res.cookie('refreshToken', refreshToken, {
       path: '/',
       httpOnly: true,
@@ -46,12 +44,12 @@ export const login = async (req, res, next) => {
       sameSite: 'Strict',
       secure: process.env.NODE_ENV === 'production',
     })
+    console.log("➡️ Before res.json, headersSent =", res.headersSent);
     return res.status(200).json({ user: userSafe, accessToken });
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
-
 
 export const users = async (req, res, next) => {
   try {

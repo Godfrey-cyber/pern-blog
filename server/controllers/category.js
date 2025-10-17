@@ -55,3 +55,4 @@ export const categories = async (req, res, next) => {
     next(error)
   }
 };
+

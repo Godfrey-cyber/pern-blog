@@ -75,6 +75,7 @@ export const blogs = async (req, res, next) => {
             role: true
           }
         },
+        comments: { select: { id: true, content: true, author: true } }
         category: { select: { title: true, slug: true } } 
       },
     });
