@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
+import { useSelector, useDispatch } from "react-redux"
 
 //packages
 import { MdOutlineChevronLeft, MdOutlineChevronRight } from 'react-icons/md';
@@ -8,10 +9,12 @@ import { useNavigate, Link } from 'react-router-dom';
 import { FaRegUserCircle } from "react-icons/fa";
 // files
 import { registerUser } from "../services/userService.js"
+import { signUpUser } from "../redux/authThunk.js"
 import { axiosInstance } from "../utilities/utiles.js"
 
 const Register = () => {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 	const [signUpData, setSignUpData] = useState({
 		email: '',
 		password: '',

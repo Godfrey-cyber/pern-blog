@@ -29,14 +29,15 @@ const Login = () => {
 	};
 	console.log(user)
 	const resetForm = () => setLoginData({ email: "", password: "" });
+
 	const handleSubmit = (event) => {
 		event.preventDefault();
 		if (email && password) {
-	    dispatch(loginUser({ email, password }, navigate, toast));
-	    resetForm();
-	  } else {
-	    toast.error("Sorry! Cannot log you without credentials");
-	  }
+		    dispatch(loginUser({ email, password }, navigate, toast));
+		    resetForm();
+	  	} else {
+	    	toast.error("Sorry! Cannot log you without credentials");
+	  	}
 	}
 	return (
 		<div className="flex flex-col w-full h-screen items-center justify-center">

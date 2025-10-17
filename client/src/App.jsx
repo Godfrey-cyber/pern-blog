@@ -26,6 +26,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loginSuccess, getCurrentUserSuccess, loginFailure, logout } from './redux/userSlice.js';
 import { axiosInstance } from './utilities/utiles.js';
 import { refreshUser } from "./redux/authThunk.js"
+import { fetchBlogs } from "./redux/blogThunk.js"
 
 function App() {
   const dispatch = useDispatch();
@@ -36,6 +37,11 @@ function App() {
     // On initial load, check if the user is authenticated
     dispatch(refreshUser());
   }, [dispatch, isAuthenticated]);
+
+  // fetch All blogs on page load
+  useEffect(() => {
+    dispatch(fetchBlogs());
+  }, [])
 
   return (
     <section className="min-h-screen font-['Montserrat'] scroll-smooth w-full overflow-x-hidden">

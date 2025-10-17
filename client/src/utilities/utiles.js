@@ -1,6 +1,7 @@
 import axios from 'axios';
 // an axios instance 
 import { store } from "../redux/store.js"
+import { logout } from "../redux/userSlice.js"
 
 export const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -50,4 +51,9 @@ export const formatDate = (isoString, locale = "en-US", options = {}) => {
     timeZoneName: 'short'
   }
   return date.toLocaleString(locale, { ...defaultOptions, ...options })
+}
+
+export const trimString = (str, maxLength) => {
+  if (!str) return "";
+  return str.length > maxLength ? str.slice(0, maxLength) + "..." : str;
 }
