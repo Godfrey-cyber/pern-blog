@@ -75,8 +75,8 @@ export const blogs = async (req, res, next) => {
             role: true
           }
         },
-        comments: { select: { id: true, content: true, author: true } }
-        category: { select: { title: true, slug: true } } 
+        comments: { select: { id: true, content: true, author: true } },
+        blogs: { select: { title: true, slug: true } } 
       },
     });
     if (!blogs || blogs.length === 0) {
@@ -185,3 +185,36 @@ export const blogByID = async (req, res, next) => {
     next(error)
   }
 };
+
+// GET Blogs by Category
+export const blogsByCategory = async (req, res, next) => {
+  const { id } = req.params
+  const cacheKey = `blogCat:${id}`;
+  try {
+    // Fetching cached blogs from Redis first
+    const cached = await redisClient.get(cacheKey);
+    if (cached) {
+      return res.json(JSON.parse(cached));
+    }
+
+    const category = await prisma.category.findUnique({
+      where: { id: Number(id) },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        blogs: {
+          select: { title: true, id: true, slug: true, image: true, description: true }
+        }  
+      },
+    });
+    if (!category) {
+      return errorResponse(res, 404, "Category not found")
+    }
+    // Cache result in Redis for 1 hour
+    await redisClient.set(cacheKey, JSON.stringify(category), 'EX', 3600);
+    return successResponse(res, 200, "Blogs successfully fetched by Category", category)
+  } catch (error) {
+    next(error)
+  }
+}
