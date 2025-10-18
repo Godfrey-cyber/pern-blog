@@ -59,7 +59,6 @@ export const blogs = async (req, res, next) => {
       const blogs = JSON.parse(cachedBlogs);
       return successResponse(res, 200, "Blog successfully fetched (from cache)", blogs);
     }
-
     const blogs = await prisma.blog.findMany({
       orderBy: {
         createdAt: "desc",
@@ -75,8 +74,6 @@ export const blogs = async (req, res, next) => {
             role: true
           }
         },
-        comments: { select: { id: true, content: true, author: true } },
-        blogs: { select: { title: true, slug: true } } 
       },
     });
     if (!blogs || blogs.length === 0) {
@@ -173,6 +170,7 @@ export const blogByID = async (req, res, next) => {
           }
         },
         category: { select: { title: true, slug: true } },  
+        comments: { select: { id: true, content: true, author: true, createdAt: true } },  
       },
     });
     if (!blog) {
@@ -189,31 +187,35 @@ export const blogByID = async (req, res, next) => {
 // GET Blogs by Category
 export const blogsByCategory = async (req, res, next) => {
   const { id } = req.params
-  const cacheKey = `blogCat:${id}`;
+  const cacheKey = `category:blogs:${id}`;
   try {
     // Fetching cached blogs from Redis first
     const cached = await redisClient.get(cacheKey);
     if (cached) {
-      return res.json(JSON.parse(cached));
+      return successResponse(res, 200, "Blogs successfully fetched by Category (cached)", JSON.parse(cached))
     }
-
-    const category = await prisma.category.findUnique({
+    const blogsByCat = await prisma.category.findUnique({
       where: { id: Number(id) },
       select: {
         id: true,
         title: true,
         description: true,
         blogs: {
-          select: { title: true, id: true, slug: true, image: true, description: true }
-        }  
+          orderBy: { createdAt: "desc" },
+          select: { 
+            title: true, id: true, slug: true, image: true, description: true, createdAt: true, 
+            author: { select: { username: true } }, 
+            category: { select: { title: true } } 
+          }
+        }
       },
     });
-    if (!category) {
+    if (!blogsByCat) {
       return errorResponse(res, 404, "Category not found")
     }
     // Cache result in Redis for 1 hour
-    await redisClient.set(cacheKey, JSON.stringify(category), 'EX', 3600);
-    return successResponse(res, 200, "Blogs successfully fetched by Category", category)
+    await redisClient.set(cacheKey, JSON.stringify(blogsByCat), 'EX', 3600);
+    return successResponse(res, 200, "Blogs successfully fetched by Category", blogsByCat)
   } catch (error) {
     next(error)
   }
