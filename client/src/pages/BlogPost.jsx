@@ -14,7 +14,8 @@ import { useDispatch, useSelector } from "react-redux"
 const BlogPost = () => {
 	const navigation = useNavigate()
 	const dispatch = useDispatch()
-	const { blog, blogs, loading, error } = useSelector(state => state.blog);
+	const { blog, loading, error } = useSelector(state => state.blog);
+	const { blogs } = useSelector(state => state.blogs);
 	const { accessToken } = useSelector(state => state.auth);
 	const { comments } = useSelector(state => state.comment);
 	const { id, slug } = useParams();

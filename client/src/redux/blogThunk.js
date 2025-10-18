@@ -1,5 +1,7 @@
 import { axiosInstance } from "../utilities/utiles.js";
-import { blogStart, blogSuccess, blogFailure, blogsStart, blogsSuccess, blogsFailure } from "./blogSlice.js";
+import { blogStart, blogSuccess, blogFailure } from "./blogSlice.js";
+import { blogsStart, blogsSuccess, blogsFailure, createBlogStart, createBlogSuccess, createBlogFailure } from "./blogsSlice.js";
+import { blogsByCatStart, blogsByCatSuccess, blogsByCatFailure } from "./blogsByCatSlice.js";
 import { createCommentStart, createCommentSuccess, createCommentFailure, commentsStart, commentsSuccess, commentsFailure } from "./commentSlice.js";
 import axios from "axios"
 
@@ -24,21 +26,29 @@ export const fetchBlogById = (id) => async dispatch => {
     dispatch(blogFailure(error?.response?.data?.msg || "Failed to fetch blog"));
 	}
 }
-// @My blogs
-
-// @Update blog
+// @Blogs by Categories
+export const blogsByCategory = (catId) => async dispatch => {
+  dispatch(blogsByCatStart());
+  try {
+    const res = await axiosInstance.get(`blogs/blogs-by-category/${catId}`);
+    dispatch(blogsByCatSuccess(res.data));
+  } catch (error) {
+    dispatch(blogsByCatFailure(error?.response?.data?.msg || "Failed to fetch blogs"));
+    console.log(error || "Blogs fetch failed.");
+  }
+}
 
 // @Delete blog
 
 // @Write blog
 export const uploadBlog = (uploadData, toast) => async dispatch => {
-  dispatch(blogStart());
+  dispatch(createBlogStart());
   try {
     const res = await axiosInstance.post("/blogs/write-blog", uploadData);
-    dispatch(blogSuccess(res.data.data));
+    dispatch(createBlogSuccess(res.data.data));
     toast.success("Successfully Uploaded the blog🥇");
   } catch (error) {
-    dispatch(blogFailure(error?.response?.data?.msg || "Failed to upload blog"));
+    dispatch(createBlogFailure(error?.response?.data?.msg || "Failed to upload blog"));
     toast.error(error?.response?.data?.msg || "Upload failed. Try again.");
   }
 }

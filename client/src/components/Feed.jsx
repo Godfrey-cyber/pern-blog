@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux"
 
 const Feed = () => {
 	// const [blogs, setBlogs] = useState([]);
-	const { blogs, loading, error } = useSelector(state => state.blog);
+	const { blogs, loading, error } = useSelector(state => state.blogs);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 

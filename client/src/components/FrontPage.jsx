@@ -5,7 +5,7 @@ import TimeAgo from "react-timeago";
 import { Link } from "react-router-dom"
 
 const FrontPage = () => {
-	const { blogs } = useSelector(state => state.blog)
+	const { blogs } = useSelector(state => state.blogs)
 	return (
 		<div className="front-1">
 			<div className="front-2">
