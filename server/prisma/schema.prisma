@@ -41,7 +41,7 @@ model Blog {
   author        User?         @relation(fields: [authorID], references: [id])
   categoryID    Int?
   category      Category?     @relation(fields: [categoryID], references: [id])
-  comments      Comment[]
+  comments      Comment[]     @relation(onDelete: CASCADE)
   slug          String        @unique
   createdAt     DateTime      @default(now())
 

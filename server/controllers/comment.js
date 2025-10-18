@@ -6,7 +6,7 @@ export const comment = async (req, res, next) => {
   const { content } = req.body;
   const { blogId } = req.params;
   const userId = req.userId; // Set by your authentication middleware
-
+  const cacheKey = "comments:all";
   try {
     if (!content) {
       return errorResponse(res, 400, "Content not found.")
@@ -25,15 +25,15 @@ export const comment = async (req, res, next) => {
         author: { connect: { id: userId } }
       },
       include: { author: {
-        select: { id: true, username: true, email: true, role: true }
+        select: { id: true, username: true }
       } }
     });
     // Publish to Redis
-    await publisher.publish(
-      "new-comment",
-      JSON.stringify(newComment)
-    );
-    await redisClient.del(`comments:${blogId}`);
+    // await publisher.publish(
+    //   "new-comment",
+    //   JSON.stringify(newComment)
+    // );
+    await redisClient.del(cacheKey);
     successResponse(res, 201, "Comment successfully created", newComment)
   } catch (error) {
     next(error);
@@ -42,7 +42,7 @@ export const comment = async (req, res, next) => {
 
 export const commentsByBlog = async (req, res, next) => {
 	const { id } = req.params;
-  const cacheKey = `comments:${id}`;
+  const cacheKey = `commentsByBlog:${id}`;
 	try {
     const cached = await redisClient.get(cacheKey);
     if (cached) {
@@ -51,6 +51,7 @@ export const commentsByBlog = async (req, res, next) => {
 	    // Find all comments for the specified blog, including author info
     const comments = await prisma.comment.findMany({
       where: { blogID: Number(id) },
+      // orderBy: { createdAt: "desc" },
       include: { author: {
         select: { id: true, username: true, email: true, role: true }
       } }
