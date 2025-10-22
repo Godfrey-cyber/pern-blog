@@ -6,7 +6,8 @@ export const comment = async (req, res, next) => {
   const { content } = req.body;
   const { blogId } = req.params;
   const userId = req.userId; // Set by your authentication middleware
-  const cacheKey = "comments:all";
+  const commentsCacheKey = `commentsByBlog:${blogId}`;
+  const blogCacheKey = `blog:${blogId}`; // 👈 add this
   try {
     if (!content) {
       return errorResponse(res, 400, "Content not found.")
@@ -28,12 +29,11 @@ export const comment = async (req, res, next) => {
         select: { id: true, username: true }
       } }
     });
-    // Publish to Redis
-    // await publisher.publish(
-    //   "new-comment",
-    //   JSON.stringify(newComment)
-    // );
-    await redisClient.del(cacheKey);
+    // 🧹 Clear all relevant caches
+    await Promise.all([
+      redisClient.del(commentsCacheKey),
+      redisClient.del(blogCacheKey),
+    ]);
     successResponse(res, 201, "Comment successfully created", newComment)
   } catch (error) {
     next(error);

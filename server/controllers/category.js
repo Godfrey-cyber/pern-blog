@@ -45,7 +45,13 @@ export const categories = async (req, res, next) => {
       const categories = JSON.parse(cachedCategories);
       return successResponse(res, 200, "Category successfully fetched (from cache)", categories);
     }
-    const categories = await prisma.category.findMany();
+    const categories = await prisma.category.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 10,
+      include: {
+        authorID: true, title: true, description: true, slug: true, image: true,
+      }
+    });
     if (!categories || categories.length === 0) {
       return errorResponse(res, 404, "Categories not found")
     }

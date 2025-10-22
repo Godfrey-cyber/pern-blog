@@ -6,8 +6,10 @@ import { publisher, redisClient } from "../redis/redisClient.js"
 // @POST - create a blog
 export const createBlog = async (req, res, next) => {
   const { description, title, content, categoryID, image } = req.body;
+
   const cacheAllBlogs = "blogs:all";
   const cacheCategoryBlogs = `category:blogs:${categoryID}`;
+
   try {
     if (!description || !title || !content || !categoryID || !image) {
       return errorResponse(res, 400, "All fields are required")
@@ -44,7 +46,9 @@ export const createBlog = async (req, res, next) => {
     await Promise.all([
       redisClient.del(cacheAllBlogs),
       redisClient.del(cacheCategoryBlogs),
+      redisClient.set(`blog:${blog.id}`, JSON.stringify(blog), 'EX', 3600)
     ]);
+    // await redisClient.set(`blog:${newBlog.id}`, JSON.stringify(newBlog), 'EX', 3600);
     // await publisher.publish("blog-events", JSON.stringify({
     //   type: "NEW_BLOG",
     //   blog,
@@ -57,32 +61,88 @@ export const createBlog = async (req, res, next) => {
 
 // @GET - get all blogs
 export const blogs = async (req, res, next) => {
-  await redisClient.flushDb()
-  const cacheKey = "blogs:all";
+  const { query } = req.query
+  const cacheKey = query
+    ? `blogs:search:${query.toLowerCase()}`
+    : "blogs:all";
+  const cacheKeyRecent = "blogs:recent";
   try {
     const cachedBlogs = await redisClient.get(cacheKey);
     if (cachedBlogs) {
       const blogs = JSON.parse(cachedBlogs);
       return successResponse(res, 200, "Blog successfully fetched (from cache)", blogs);
     }
-    const blogs = await prisma.blog.findMany({
-      take: 6,
-      include: { 
-        authorID: false,
-        author: {
-          select: {
-            id: true,
-            username: true,
-          }
+    let blogs;
+    if (query && query.trim() !== "") {
+      blogs = await prisma.blog.findMany({
+        where: {
+          OR: [
+              { title: { contains: query, mode: "insensitive" } },
+              { description: { contains: query, mode: "insensitive" } },
+              {
+                author: {
+                  username: { contains: query, mode: "insensitive" },
+                },
+              },
+              {
+                category: {
+                  title: { contains: query, mode: "insensitive" },
+                },
+              },
+            ],
+          },
+          orderBy: { createdAt: "desc" },
+        include: {
+          author: { select: { id: true, username: true } },
+          category: { select: { title: true } },
         },
-        category: { select: { title: true } },
-      },
-    });
-    if (!blogs || blogs.length === 0) {
-      return errorResponse(res, 404, "Blogs not found")
+        take: 10,
+      });
+    } else {
+      blogs = await prisma.blog.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 6,
+        include: {
+          author: { select: { id: true, username: true } },
+          category: { select: { title: true } },
+        },
+      });
     }
-    await redisClient.set(cacheKey, JSON.stringify(blogs), "EX", 60);
-    return successResponse(res, 200, "Blog successfully fetched", blogs)
+
+    if (!blogs || blogs.length === 0) {
+      return errorResponse(res, 404, "No blogs found");
+    }
+
+    await redisClient.set(
+      cacheKey,
+      JSON.stringify(blogs),
+      "EX",
+      query ? 600 : 60
+    );
+
+
+    // const blogs = query ? await prisma.blog.findMany({
+    //   where: { title: { contains: query, mode: "insensitive" } }
+    //   orderBy: { createdAt: "desc" },
+    //   take: 21,
+    //   include: { 
+    //     id: true,
+    //     title: true,
+    //     slug: true
+    //     author: {
+    //       select: {
+    //         id: true,
+    //         username: true,
+    //       }
+    //     },
+    //     category: { select: { title: true, id: true, slug: true } }, // 
+    //   },
+    // });
+    // if (!blogs || blogs.length === 0) {
+    //   return errorResponse(res, 404, "Blogs not found")
+    // }
+    // await redisClient.set(cacheKey, JSON.stringify(blogs), "EX", 120);
+    return successResponse(res, 200, query ? "Blogs search results" : "Blogs successfully fetched", blogs)
   } catch (error) {
     next(error)
   }
@@ -170,7 +230,7 @@ export const blogByID = async (req, res, next) => {
             username: true,
           }
         },
-        category: { select: { title: true, slug: true } },
+        category: { select: { title: true, slug: true, id: true } },
         comments: { select: { id: true, content: true, author: { select: { username: true } }, createdAt: true } },  
       },
     });
@@ -206,7 +266,7 @@ export const blogsByCategory = async (req, res, next) => {
           select: { 
             title: true, id: true, slug: true, image: true, description: true, createdAt: true, 
             author: { select: { username: true } }, 
-            category: { select: { title: true } }, 
+            category: { select: { title: true, id: true, slug: true } }, 
           }
         }
       },
@@ -221,6 +281,10 @@ export const blogsByCategory = async (req, res, next) => {
   } catch (error) {
     next(error)
   }
+}
+
+export const blogsByQuery = async (req, res, next) => {
+
 }
 
 export const deleteManyBlogs = async(req, res) => {
