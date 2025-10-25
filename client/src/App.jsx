@@ -27,7 +27,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loginSuccess, getCurrentUserSuccess, loginFailure, logout } from './redux/userSlice.js';
 import { axiosInstance } from './utilities/utiles.js';
 import { refreshUser } from "./redux/authThunk.js"
-import { fetchBlogs } from "./redux/blogThunk.js"
+import { fetchBlogs, fetchCategories } from "./redux/blogThunk.js"
 
 function App() {
   const dispatch = useDispatch();
@@ -42,6 +42,11 @@ function App() {
   // fetch All blogs on page load
   useEffect(() => {
     dispatch(fetchBlogs());
+  }, [])
+
+  // fetch All blogs on page load
+  useEffect(() => {
+    dispatch(fetchCategories());
   }, [])
 
   return (
@@ -60,11 +65,6 @@ function App() {
           <Route path="/dashboard/auth/forgot-password" element={<ForgotPassword />} />
           <Route path="/dashboard/blogs/blog-list" element={<MyBlogs />} />
           <Route path="/category/:slug/:id" element={<Categories />} />
-          {/*// special pages*/}
-          {/*<Route path="/market" element={<ForgotPassword />} />*/}
-          {/*<Route path="/leaders" element={<ForgotPassword />} />*/}
-          {/*<Route path="/career" element={<ForgotPassword />} />*/}
-          {/*<Route path="/lifestyle" element={<ForgotPassword />} />*/}
         </Routes>
       </BrowserRouter>
     </section>

@@ -29,10 +29,16 @@ const blogSlice = createSlice({
 			state.isFetching = false;
 			state.success = false;
 		},
+		clearBlog: (state, action) => {
+			state.error = false;
+			state.blog = null;
+			state.isFetching = false;
+			state.success = false;
+		},
 	},
 });
 
-export const { blogStart, blogSuccess, blogFailure } = blogSlice.actions;
+export const { blogStart, blogSuccess, blogFailure, clearBlog } = blogSlice.actions;
 export const selectBlog = state => state.blog.blog;
 
 export default blogSlice.reducer;

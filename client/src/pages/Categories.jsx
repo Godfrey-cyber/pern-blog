@@ -17,14 +17,13 @@ const Categories = () => {
 	    if (!id) return;
 	    dispatch(blogsByCategory(id))
 	  }, [id, dispatch]);
-	console.log(blogsByCat)
 	if (loading) return <p className="text-2xl font-bold-red-gray-500 w-screen h-screen flex items-center justify-center">Loading blog...</p>;
-	if (!blogsByCat) return <p className="text-2xl font-bold-red-gray-500 w-screen h-screen flex items-center justify-center">Loading</p>
+	if (blogsByCat.length === 0) return <p className="text-2xl font-bold-red-gray-500 w-screen h-screen flex items-center justify-center">Loading</p>
 	return (
 		<div className="flex flex-col h-min-screen w-full">
 		 	<BlogHeader />
 		 	<div className="feed space-y-6 mt-30 w-full lg:w-4/5">
-				{blogsByCat?.data?.blogs?.slice(1, 6).map(({id, slug, title, description, image, createdAt, author, category}) => (
+				{blogsByCat?.blogs?.slice(0, 6).map(({id, slug, title, description, image, createdAt, author, category}) => (
 					<Link to={`/blog/${slug}/${id}`} key={id || slug}>
 						<div className="grid grid-cols-12 gap-4 rounded-md">
 							<img src={image} alt="" className="col-span-3 h-44 object-fit" />

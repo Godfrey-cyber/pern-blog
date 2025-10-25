@@ -56,7 +56,7 @@ const commentSlice = createSlice({
 	    },
 	    createCommentSuccess: (state, action) => {
 	      state.isFetching = false;
-	      state.comment.push(action.payload); // add new blog to list
+	      state.comments.unshift(action.payload); // add new blog to list
 	      state.success = true;
 	      state.error = null;
 	    },
@@ -68,7 +68,7 @@ const commentSlice = createSlice({
 	},
 });
 
-export const { commentStart, commentSuccess, commentFailure, commentsStart, commentsSuccess, commentsFailure, createCommentStart, createCommentSuccess, createCommentFailure } = commentSlice.actions;
-export const selectComment = state => state.comment.comment;
+export const { createCommentStart, createCommentSuccess, createCommentFailure } = commentSlice.actions;
+export const selectComment = state => state.comment;
 
 export default commentSlice.reducer;

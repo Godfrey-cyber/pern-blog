@@ -20,24 +20,28 @@ const Feed = () => {
 	if (loading) return <p>Loading blogs...</p>;
 	return (
 		<>
-			{blogs?.slice(1, 6).map(({id, slug, createdAt, title, description, image, category}) => (
-				<Link to={`/blog/${slug}/${id}`} key={id || slug} className="feed">
-					<div className="grid grid-cols-12 gap-4 rounded-md">
-						<img src={image} alt="" className="col-span-6 h-64 object-fit" />
-						<div className="col-span-6 flex flex-col space-y-4">
+			{blogs?.slice(14, 20).map(({id, slug, createdAt, title, description, image, category}) => (
+				<div key={id || slug} className="feed">
+					<div className="grid grid-cols-12 gap-2 md:gap-4 transform rotate-180 md:rotate-0 rounded-md">
+						<Link to={`/blog/${slug}/${id}`} className="col-span-12 md:col-span-6 transform rotate-180 md:rotate-0 h-52 md:h-64">
+							<img src={image} alt="" className="flex h-full w-full object-fit" />
+						</Link>
+						<div className="col-span-12 md:col-span-6 transform rotate-180 md:rotate-0 flex flex-col space-y-2 md:space-y-4">
 							<span className="flex items-center flex-row space-x-3">
-								<p className="text-sm font-semibold text-amber-500">{category?.title}</p>
-								<p className="front-time text-xs">
-									<TimeAgo date={createdAt} />
-								</p>
+								<Link to={`/category/${category?.slug}/${category?.id}`}>
+									<p className="text-sm font-semibold text-amber-500">{category?.title}</p>
+								</Link>
+								<TimeAgo className="text-gray-500 text-xs font-semibold" date={createdAt} />
 							</span>
-							<span className="flex flex-col space-y-3">
-								<p className="text-2xl font-bold text-black">{title}</p>
-								<p className="text-sm font-normal text-black">{description}</p>
-							</span>
+							<Link to={`/blog/${slug}/${id}`}>
+								<span className="flex flex-col space-y-1 md:space-y-3">
+									<p className="text-lg md:text-xl lg:text-2xl font-bold text-black leading-5 md:leading-8">{title}</p>
+									<p className="hidden md:flex text-sm font-normal text-black">{description}</p>
+								</span>
+							</Link>
 						</div>
 					</div>
-				</Link>
+				</div>
 			))}
 		</>
 	)
