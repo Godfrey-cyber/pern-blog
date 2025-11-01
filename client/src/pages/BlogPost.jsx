@@ -34,7 +34,7 @@ const BlogPost = () => {
 	return (
 		<div className="flex flex-col w-full h-screen w-full">
 		 	<BlogHeader />
-			<div className="grid grid-cols-12 gap-4 lg:gap-8 px-5 md:px-10 lg:px-20 mt-28">
+			<div className="grid grid-cols-12 gap-4 lg:gap-8 px-5 md:px-10 lg:px-20 mt-20">
 				<div className="col-span-12 md:col-span-8 flex flex-col space-y-4">
 					<span className="flex flex-col space-y-1">
 						<Link to={`/category/${blog?.category?.slug}/${blog?.category?.id}`}>

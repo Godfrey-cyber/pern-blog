@@ -21,6 +21,7 @@ import Dashboard from "./pages/Dashboard.jsx"
 import MyBlogs from "./pages/MyBlogs.jsx"
 import Categories from "./pages/Categories.jsx"
 import ForgotPassword from "./pages/ForgotPassword.jsx"
+import TestPage from "./pages/TestPage.jsx"
 
 import { useDispatch, useSelector } from 'react-redux';
 // import { currentUser, refreshToken } from './redux/userSlice.js';
@@ -65,6 +66,7 @@ function App() {
           <Route path="/dashboard/auth/forgot-password" element={<ForgotPassword />} />
           <Route path="/dashboard/blogs/blog-list" element={<MyBlogs />} />
           <Route path="/category/:slug/:id" element={<Categories />} />
+          <Route path="/blogs/function" element={<TestPage />} />
         </Routes>
       </BrowserRouter>
     </section>

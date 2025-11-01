@@ -30,11 +30,11 @@ const FrontPage = () => {
 									<Link key={blog.id} to={`/blog/${blog.slug}/${blog.id}`}>
 										<span className="front-span">
 											<p className="front-p">{trimString(blog.title, 60)}</p>
-											<p className="front-time">
+											{/*<p className="front-time">*/}
 												<TimeAgo className="text-gray-500 text-xs font-semibold" date={blog.createdAt} 
 												formatter={(value, unit, suffix) => `${value} ${unit}${value > 1 ? "s" : ""} ${suffix}`}
 												/>
-											</p>
+											{/*</p>*/}
 										</span>
 									</Link>
 								))}
