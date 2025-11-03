@@ -6,6 +6,7 @@ import { uploadBlog } from "../redux/blogThunk.js"
 import { useSelector, useDispatch } from "react-redux"
 import { axiosInstance } from "../utilities/utiles.js"
 import axios from "axios"
+import { FileText, Upload } from 'lucide-react';
 
 export default function WriteBlogModal({ isOpen, onClose }) {
   const [blogData, setBlogData] = useState({
@@ -23,7 +24,7 @@ export default function WriteBlogModal({ isOpen, onClose }) {
   const dispatch = useDispatch()
   const { title, description, content, image, categoryID } = blogData;
   const { user } = useSelector(state => state.auth);
-
+  const darkMode = false
   
   const onChange = event => {
 		setBlogData(prev => ({
@@ -109,62 +110,104 @@ export default function WriteBlogModal({ isOpen, onClose }) {
         <h2 className="text-2xl font-bold mb-4 text-green-700 py-2">✍️ Write a New Blog</h2>
 
         <form onSubmit={handleSubmit} className="flex-1 flex flex-col space-y-4">
-          {/* Title */}
+        {/* Blog Title */}
+        <div>
+          <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+            Blog Title
+          </label>
           <input
             type="text"
             name="title"
             placeholder="Enter blog title..."
             value={title}
             onChange={onChange}
-            className="text-sm font-normal text-gray-600 w-full p-3 border border-gray-500 rounded-lg focus:outline-none focus:ring focus:border-green-500"
             required
+            className={`w-full px-4 py-3 rounded-lg border ${
+              darkMode 
+                ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                : 'bg-white border-gray-300 text-gray-900'
+            } focus:outline-none focus:ring-2 focus:ring-purple-500`}
           />
+        </div>
+        {/* Blog Description */}
+        <div>
+          <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+            Blog Description
+          </label>
           <input
             type="text"
             name="description"
             placeholder="Enter blog description..."
             value={description}
             onChange={onChange}
-            className="text-sm font-normal text-gray-600 w-full p-3 border border-gray-500 rounded-lg focus:outline-none focus:ring focus:border-green-500"
             required
+            className={`w-full px-4 py-3 rounded-lg border ${
+              darkMode 
+                ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                : 'bg-white border-gray-300 text-gray-900'
+            } focus:outline-none focus:ring-2 focus:ring-purple-500`}
           />
+        </div>
+        {/* Blog Category */}
+        <div>
+          <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+            Blog Category
+          </label>
           <select
-			name="categoryID"
-			value={categoryID}
-			onChange={onChange}
-			className="text-sm font-normal text-gray-600 w-full p-3 border border-gray-500 rounded-lg focus:outline-none focus:ring focus:border-green-500"
-			required
-			>
-			  <option value="">-- Select Category --</option>
-	            {categories?.map((cat) => (
-	              <option key={cat.id} value={cat.id}>
-	                {cat.title}
-	              </option>
-	            ))}
-			</select>
-			{/* Image */}
-			<input
-	            type="file"
-	            accept="image/*"
-				multiple
-				id="name"
-	            name="image"
-	            placeholder="Enter blog image..."
-	            onChange={handleImageUpload}
-	            className="text-sm font-normal text-gray-600 w-full p-3 border border-gray-500 rounded-lg focus:outline-none focus:ring focus:border-green-500"
-	            required
-	        />
-	        {uploading && <p className="text-sm text-blue-500">Image Uploading...</p>}
-	        {image && (
+      			name="categoryID"
+      			value={categoryID}
+      			onChange={onChange}
+      			className={`w-full px-4 py-3 rounded-lg border ${
+                  darkMode 
+                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                    : 'bg-white border-gray-300 text-gray-900'
+                } focus:outline-none focus:ring-2 focus:ring-purple-500`}
+      			required
+    			>
+    			  <option value="">-- Select Category --</option>
+    	            {categories?.map((cat) => (
+    	              <option key={cat.id} value={cat.id}>
+    	                {cat.title}
+    	              </option>
+    	            ))}
+    			</select>
+        </div>
+			 {/* Image */}
+        <div>
+          <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+            Featured Image
+          </label>
+          <div className={`border-2 border-dashed rounded-lg text-center ${
+            darkMode ? 'border-gray-600' : 'border-gray-300'
+          }`}>
+      			<input
+              type="file"
+              accept="image/*"
+      	      multiple
+      	      id="name"
+              name="image"
+              placeholder="Enter blog image..."
+              onChange={handleImageUpload}
+              className="border-2 border-dashed rounded-lg p-8 text-center w-full h-full"
+              required
+            />
+            <Upload className={`w-12 h-12 mx-auto mb-4 ${darkMode ? 'text-gray-400' : 'text-gray-400'}`} />
+            <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              Drop your image here or click to browse
+            </p>
+            {uploading && <p className="text-sm text-blue-500">Image Uploading...</p>}
+            {image && (
             <div className="flex gap-2">
               <img
-                src={image}
-                alt="preview"
-                className="w-32 h-32 object-cover rounded"
+                  src={image}
+                  alt="preview"
+                  className="w-32 h-32 object-cover rounded"
               />
             </div>
-          )}
-          {/* Rich Text Editor */}
+              )}
+          </div>
+        </div>
+          {/* Rich Text Editor -- Blog Content */}
           <div className="flex-1 overflow-y-auto">
             <ReactQuill
               theme="snow"
@@ -176,23 +219,18 @@ export default function WriteBlogModal({ isOpen, onClose }) {
               className="h-full"
             />
           </div>
-
-          {/* Actions */}
-          <div className="flex justify-end space-x-3">
-            <button
-              type="button"
-              onClick={onClose}
-              className="text-lg px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="text-sm px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-            >
-              Publish
-            </button>
-          </div>
+          <div className="flex space-x-4">
+          <button type="submit" className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition font-medium">
+            Publish Post
+          </button>
+          <button type="button" onClick={onClose} className={`px-6 py-3 rounded-lg font-medium ${
+            darkMode 
+              ? 'bg-gray-700 text-white hover:bg-gray-600' 
+              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          } transition`}>
+            Cancel
+          </button>
+        </div>
         </form>
       </div>
     </div>

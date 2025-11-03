@@ -34,6 +34,7 @@ import Sidebar from "../components/SideBar.jsx"
 import DashHeader from "../components/DashHeader.jsx"
 import RecentDashBlogs from "../components/RecentDashBlogs.jsx"
 import StatsCards from "../components/StatsCards.jsx"
+import RecentActivities from "../components/RecentActivities.jsx"
 import { 
   LayoutDashboard, 
   FileText, 
@@ -53,8 +54,9 @@ import {
   Moon,
   Sun,
   HelpCircle,
-  Folder
-} from 'lucide-react';
+  Folder,
+  ThumbsUp
+} from 'lucide-react'; 
 
 const DashBoard = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -72,6 +74,27 @@ const DashBoard = () => {
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
     { id: 'users', label: 'Users', icon: Users },
   ];
+
+  const renderContent = () => {
+    switch(activeMenu) {
+      case 'dashboard':
+        return <DashboardPage darkMode={darkMode} />;
+      case 'posts':
+        return <AllPostsPage darkMode={darkMode} />;
+      case 'create':
+        return <CreatePostPage darkMode={darkMode} />;
+      case 'media':
+        return <MediaLibraryPage darkMode={darkMode} />;
+      case 'categories':
+        return <CategoriesPage darkMode={darkMode} />;
+      case 'analytics':
+        return <AnalyticsPage darkMode={darkMode} />;
+      case 'settings':
+        return <SettingsPage darkMode={darkMode} />;
+      default:
+        return <DashboardPage darkMode={darkMode} />;
+    }
+  };
 
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-gray-900' : 'bg-gray-100'} flex`}>
@@ -92,6 +115,11 @@ const DashBoard = () => {
         />
         <StatsCards darkMode={darkMode} />
       	<RecentDashBlogs darkMode={darkMode} />
+      	<RecentActivities darkMode={darkMode} />
+      	{/*<WriteBlogModal
+		    isOpen={isModalOpen}
+		    onClose={() => setIsModalOpen(false)}
+		/>*/}
       </div>
     </div>
   );

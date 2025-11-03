@@ -6,7 +6,6 @@ import { Link } from "react-router-dom"
 
 const FrontPage = () => {
 	const { blogs } = useSelector(state => state.blogs)
-	console.log(blogs)
 	return (
 		<div className="front-1">
 			<div className="front-2">

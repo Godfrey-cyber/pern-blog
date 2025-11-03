@@ -45,7 +45,6 @@ const BlogHeader = ({ title = "My Blog" }) => {
 	    dispatch(logoutUser());
 	    navigate("/")
 	};
-
 	const { categories } = useSelector(state => state.category);
 	const sidebarVariants = {
 	    hidden: { x: -300, opacity: 0 },

@@ -204,7 +204,7 @@ const SideBar = ({ collapsed, setCollapsed, activeMenu, setActiveMenu, darkMode,
         <div className={`flex items-center ${collapsed ? 'justify-center' : 'space-x-3'}`}>
           <div className="relative">
             <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-              <span className="text-white font-semibold">{user?.username?.split(" ")[0].charAt(0)}{user?.username?.split(" ")[1].charAt(0)}</span>
+              <span className="text-white font-semibold">{user?.username.split(" ").length === 2 ? user?.username?.split(" ")[0].charAt(0) : user?.username?.charAt(0)}{user?.username.split(" ").length === 2 ? user?.username?.split(" ")[1].charAt(0) : ""}</span>
             </div>
             <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
           </div>

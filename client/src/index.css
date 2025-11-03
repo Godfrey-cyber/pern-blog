@@ -40,7 +40,7 @@
         @apply text-xs font-semibold text-black cursor-pointer
     }
     .nav-icon {
-        @apply h-6 w-6 text-gray-500 group-hover:text-green-600 transition-all delay-300 cursor-pointer
+        @apply h-6 w-6 text-gray-500 text-white group-hover:text-green-600 transition-all delay-300 cursor-pointer
     }
 
     /*  REGISTER  */

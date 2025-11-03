@@ -3,11 +3,11 @@ import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
-import { Search, Menu, X, Heart, MessageCircle, Share2, Calendar, User, Clock, TrendingUp, Edit, Trash2, Eye, BarChart3, Users, FileText, Plus, Save, XCircle } from 'lucide-react';
+import { Search, Menu, X, Heart, MessageCircle, Share2, Calendar, Filter, User, Clock, TrendingUp, Edit, Trash2, Eye, BarChart3, Users, FileText, Plus, Save, XCircle } from 'lucide-react';
 import { trimString } from "../utilities/utiles.js"
 import TimeAgo from "react-timeago";
 
-const RecentDashBlogs = () => {
+const RecentDashBlogs = ({ darkMode }) => {
 	const { blogs } = useSelector(state => state.blogs)
 	const { user } = useSelector(state => state.auth)
 
@@ -269,9 +269,34 @@ const RecentDashBlogs = () => {
 		          <div className="p-6 border-b">
 		            <h2 className="text-xl font-bold text-gray-900">Recent Posts</h2>
 		          </div>
+              <div className="flex justify-between items-center my-4 px-4">
+                <div className="flex items-center space-x-3">
+                <button className={`px-4 py-2 rounded-lg ${
+                darkMode ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-700'
+              } hover:opacity-80 transition`}>
+                All Posts
+              </button>
+              <button className={`px-4 py-2 rounded-lg ${
+                darkMode ? 'text-gray-400 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-200'
+              } transition`}>
+                Published
+              </button>
+              <button className={`px-4 py-2 rounded-lg ${
+                darkMode ? 'text-gray-400 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-200'
+              } transition`}>
+                Drafts
+              </button>
+            </div>
+            <button className={`flex items-center space-x-2 px-4 py-2 rounded-lg ${
+              darkMode ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-700'
+            }`}>
+              <Filter className="w-4 h-4" />
+              <span>Filter</span>
+            </button>
+          </div>
 		          <div className="overflow-x-auto">
 		            <table className="w-full">
-		              <thead className="bg-gray-50">
+		              <thead className={darkMode ? 'bg-gray-700' : 'bg-gray-50'}>
 		                <tr>
 		                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
 		                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
