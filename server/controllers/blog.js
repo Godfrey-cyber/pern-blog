@@ -101,7 +101,7 @@ export const blogs = async (req, res, next) => {
     } else {
       blogs = await prisma.blog.findMany({
         orderBy: { createdAt: "desc" },
-        take: 6,
+        take: 21,
         include: {
           author: { select: { id: true, username: true } },
           category: { select: { title: true } },
@@ -142,7 +142,7 @@ export const blogs = async (req, res, next) => {
     //   return errorResponse(res, 404, "Blogs not found")
     // }
     // await redisClient.set(cacheKey, JSON.stringify(blogs), "EX", 120);
-    return successResponse(res, 200, query ? "Blogs search results" : "Blogs successfully fetched", blogs)
+    return successResponse(res, 200, query ? "Blogs search results" : "Blogs successfully fetched 🪄", blogs)
   } catch (error) {
     next(error)
   }

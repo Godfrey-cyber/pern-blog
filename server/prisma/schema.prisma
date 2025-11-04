@@ -71,3 +71,13 @@ model Category {
   author        User?         @relation(fields: [authorID], references: [id])
   createdAt     DateTime      @default(now())
 }
+
+model Like {
+  id     Int  @id @default(autoincrement())
+  userId Int
+  blogId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  blog   Blog @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, blogId])
+}
