@@ -1,2 +1,5 @@
 {"level":"info","message":"Server started","timestamp":"2025-11-04T13:12:44.763Z"}
 {"level":"error","message":"An error occurred","timestamp":"2025-11-04T13:12:45.022Z"}
+{"level":"info","message":"::ffff:172.24.0.1 - - [04/Nov/2025:13:28:35 +0000] \"GET /api/v1/category/get-categories HTTP/1.1\" 200 1367 \"-\" \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36\"","timestamp":"2025-11-04T13:28:35.974Z"}
+{"level":"info","message":"Server started","timestamp":"2025-11-04T13:32:11.553Z"}
+{"level":"error","message":"An error occurred","timestamp":"2025-11-04T13:32:11.741Z"}
