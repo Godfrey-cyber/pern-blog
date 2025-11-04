@@ -21,65 +21,7 @@ const RecentDashBlogs = ({ darkMode }) => {
 	    category: '',
 	    status: 'Draft'
 	  });
-	  const [blogPosts, setBlogPosts] = useState(
-	  	[
-	  		{
-      id: 1,
-      title: "Getting Started with React and Tailwind CSS",
-      excerpt: "Learn how to build beautiful, responsive web applications using React and Tailwind CSS. This comprehensive guide covers everything from setup to deployment.",
-      author: "Sarah Johnson",
-      date: "Oct 20, 2024",
-      category: "Web Development",
-      readTime: "8 min read",
-      image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&q=80",
-      likes: 234,
-      comments: 45,
-      status: "Published",
-      views: "2.3K"
-    },
-    {
-      id: 2,
-      title: "The Future of Web Design Trends in 2025",
-      excerpt: "Explore the cutting-edge design trends that are shaping the future of web development, from AI-powered interfaces to immersive experiences.",
-      author: "Michael Chen",
-      date: "Oct 18, 2024",
-      category: "Design",
-      readTime: "6 min read",
-      image: "https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=800&q=80",
-      likes: 189,
-      comments: 32,
-      status: "Published",
-      views: "1.8K"
-    },
-    {
-      id: 3,
-      title: "Building Scalable APIs with Node.js",
-      excerpt: "Discover best practices for creating robust, scalable REST APIs using Node.js and Express. Learn about authentication, error handling, and more.",
-      author: "David Martinez",
-      date: "Oct 15, 2024",
-      category: "Backend",
-      readTime: "10 min read",
-      image: "https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=800&q=80",
-      likes: 312,
-      comments: 67,
-      status: "Draft",
-      views: "-"
-    },
-    {
-      id: 4,
-      title: "Mastering TypeScript for Modern Development",
-      excerpt: "Take your JavaScript skills to the next level with TypeScript. Learn advanced types, generics, and how to build type-safe applications.",
-      author: "Emily Watson",
-      date: "Oct 12, 2024",
-      category: "Programming",
-      readTime: "12 min read",
-      image: "https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=800&q=80",
-      likes: 267,
-      comments: 54,
-      status: "Published",
-      views: "1.5K"
-    }
-	  	])
+	  const [blogPosts, setBlogPosts] = useState(blogs)
 	const post = blogs[0]
 
 	const dashboardStats = [
@@ -88,7 +30,6 @@ const RecentDashBlogs = ({ darkMode }) => {
 	    { label: "Followers", value: "8,492", icon: Users, change: "+23.1%", trend: "up" },
 	    { label: "Engagement", value: "4.8%", icon: BarChart3, change: "+0.3%", trend: "up" }
 	];
-	console.log(post)
 	// Delete functionality
   const handleDeleteClick = (post) => {
     setPostToDelete(post);
@@ -306,7 +247,7 @@ const RecentDashBlogs = ({ darkMode }) => {
 		                </tr>
 		              </thead>
 		              <tbody className="bg-white divide-y divide-gray-200">
-		                {blogs.map((post, idx) => (
+		                {blogs?.slice(0, 8)?.map((post, idx) => (
 		                  <tr key={idx} className="hover:bg-gray-50">
 		                    <td className="flex space-x-2 px-6 py-4 whitespace-nowrap">
 		                      <img className="h-10 w-10 object-cover rounded-md" src={post.image} alt="" />

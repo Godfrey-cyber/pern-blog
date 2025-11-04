@@ -119,6 +119,17 @@ backdropVariants={backdropVariants} open={open} setOpen={setOpen} />
                 </button>
               </div>
 
+              {/*action buttons*/}
+              <div className="mt-8 border-t border-white/6 pt-6 text-sm text-white/70">
+                <div className="mb-2">Theme</div>
+                <div className="flex items-center gap-2">
+                  {user ? <button onClick={handleLogout} className="px-3 py-1 rounded bg-white/6">Logout</button> : <Link to="/auth/login"><button className="px-3 py-1 rounded bg-white/6">Login</button></Link>}
+                  <Link to="/blogs/username/dashboard">
+                    {user && <button className="px-3 py-1 rounded bg-white/6">Dashboard</button>}
+                  </Link>
+                </div>
+              </div>
+
               <SidebarMenu categories={categories} />
 
               <div className="mt-6">
@@ -128,15 +139,7 @@ backdropVariants={backdropVariants} open={open} setOpen={setOpen} />
                   <li className="px-3 py-2 bg-white/2 rounded-lg">Redis caching patterns</li>
                 </ul>
               </div>
-
-              <div className="mt-8 border-t border-white/6 pt-6 text-sm text-white/70">
-                <div className="mb-2">Theme</div>
-                <div className="flex items-center gap-2">
-                  <button className="px-3 py-1 rounded bg-white/6">Logout</button>
-                  <button className="px-3 py-1 rounded bg-white/6">Login</button>
-                </div>
-              </div>
-
+              {/*footer*/}
               <footer className="mt-8 text-xs text-white/50">
                 © {new Date().getFullYear()} {title} — Built with ❤️ by Godfrey.
               </footer>

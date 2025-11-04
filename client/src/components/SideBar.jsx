@@ -2,26 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 import { logoutUser } from "../redux/authThunk.js"
-import { 
-  LayoutDashboard, 
-  FileText, 
-  PenSquare, 
-  Image, 
-  Users, 
-  MessageSquare, 
-  Settings, 
-  BarChart3, 
-  Tag, 
-  Bell,
-  ChevronLeft,
-  ChevronRight,
-  Search,
-  LogOut,
-  Moon,
-  Sun,
-  HelpCircle,
-  Folder
-} from 'lucide-react';
+import { LayoutDashboard, FileText, PenSquare, Image, Users, MessageSquare, Settings, BarChart3, Tag, Bell, ChevronLeft, ChevronRight, Search, LogOut, Moon, Sun, HelpCircle, Folder } from 'lucide-react';
 
 // Sidebar Component
 const SideBar = ({ collapsed, setCollapsed, activeMenu, setActiveMenu, darkMode, setDarkMode }) => {

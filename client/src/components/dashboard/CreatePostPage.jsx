@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import { ToastContainer, toast } from 'react-toastify';
-import { uploadBlog } from "../redux/blogThunk.js"
+import { uploadBlog } from "../../redux/blogThunk.js"
 import { useSelector, useDispatch } from "react-redux"
-import { axiosInstance } from "../utilities/utiles.js"
+import { axiosInstance } from "../../utilities/utiles.js"
 import axios from "axios"
 import { FileText, Upload } from 'lucide-react';
 
-export default function WriteBlogModal({ isOpen, onClose }) {
+const CreatePostPage = ({ darkMode }) => {
   const [blogData, setBlogData] = useState({
-		title: '',
-		description: '',
-		content: '',
-		image: '',
-		categoryID: ''
-	});
+    title: '',
+    description: '',
+    content: '',
+    image: '',
+    categoryID: ''
+  });
   const [categories, setCategories] = useState([])
   const [categoryId, setCategoryId] = useState([])
   const [uploading, setUploading] = useState(false);
@@ -24,60 +24,57 @@ export default function WriteBlogModal({ isOpen, onClose }) {
   const dispatch = useDispatch()
   const { title, description, content, image, categoryID } = blogData;
   const { user } = useSelector(state => state.auth);
-  const darkMode = false
-  
+
   const onChange = event => {
-		setBlogData(prev => ({
-			...prev,
-			[event.target.name]: event.target.value,
-		}));
-		// setErrors({ ...errors, [event.target.name]: "" });
-	};
+    setBlogData(prev => ({
+      ...prev,
+      [event.target.name]: event.target.value,
+    }));
+  };
 
-	const handleContentChange = (value) => {
-	setBlogData((prev) => ({
-	    ...prev,
-	    content: value,
-	    }));
-	  };
-	  console.log(import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET)
-	  console.log(import.meta.env.VITE_CLOUDINARY_NAME)
-	// image upload 
-	const handleImageUpload = async (event) => {
-		const file = event.target.files[0]; // 👈 take first file
-  		if (!file) return;
-	  setUploading(true);
-	  try {
-	    const formData = new FormData();
-	    formData.append("file", file);
-	    formData.append("upload_preset", import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
+  const handleContentChange = (value) => {
+  setBlogData((prev) => ({
+      ...prev,
+      content: value,
+      }));
+    };
+    console.log(import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET)
+    console.log(import.meta.env.VITE_CLOUDINARY_NAME)
+  // image upload 
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0]; // 👈 take first file
+      if (!file) return;
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
 
-	    const { data } = await axios.post(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_NAME}/image/upload`,formData);
+      const { data } = await axios.post(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_NAME}/image/upload`,formData);
 
-	    setBlogData((prev) => ({
-	      ...prev,
-	      image: data.secure_url, // save Cloudinary URL
-	    }));
-	  } catch (err) {
-	    toast.error("Image upload failed");
-	    console.error(err);
-	  } finally {
-	    setUploading(false);
-	  }
-	};
+      setBlogData((prev) => ({
+        ...prev,
+        image: data.secure_url, // save Cloudinary URL
+      }));
+    } catch (err) {
+      toast.error("Image upload failed");
+      console.error(err);
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleSubmit = async (event) => {
-  	event.preventDefault();
-  	const payload = {
-	    ...blogData,
-	    categoryID: parseInt(blogData.categoryID, 10),
-	  };
+    event.preventDefault();
+    const payload = {
+      ...blogData,
+      categoryID: parseInt(blogData.categoryID, 10),
+    };
     dispatch(uploadBlog(payload, toast));
     setBlogData({ title: "", description: "", content: "", image: "", categoryID: "" });
     // setErrors({});
   };
-  
-  // categories
+
   useEffect(() => {
     const getCategories = async () => {
       try {
@@ -91,29 +88,20 @@ export default function WriteBlogModal({ isOpen, onClose }) {
       }
     };
 
-    if (isOpen) {
+    // if (isOpen) {
       getCategories();
-    }
-  }, [isOpen]);
-  console.log(blogData)
-  if (!isOpen) return null;
-  return (
-    <div
-      className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-end z-50"
-      onClick={onClose}
-    >
-      {/* Modal Content */}
-      <div
-        className="bg-white shadow-lg w-full md:w-1/2 h-full md:h-screen p-6 flex flex-col overflow-y-scroll"
-        onClick={(event) => event.stopPropagation()} // prevent close on modal click
-      >
-        <h2 className="text-2xl font-bold mb-4 text-green-700 py-2">✍️ Write a New Blog</h2>
+    // }
+  }, []);
 
-        <form onSubmit={handleSubmit} className="flex-1 flex flex-col space-y-4">
-        {/* Blog Title */}
+
+
+  return (
+    <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-sm p-8`}>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/*Blog Title*/}
         <div>
           <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-            Blog Title
+            Post Title
           </label>
           <input
             type="text"
@@ -129,10 +117,10 @@ export default function WriteBlogModal({ isOpen, onClose }) {
             } focus:outline-none focus:ring-2 focus:ring-purple-500`}
           />
         </div>
-        {/* Blog Description */}
+        {/*Blog Description*/}
         <div>
           <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-            Blog Description
+            Post Description
           </label>
           <input
             type="text"
@@ -148,31 +136,30 @@ export default function WriteBlogModal({ isOpen, onClose }) {
             } focus:outline-none focus:ring-2 focus:ring-purple-500`}
           />
         </div>
-        {/* Blog Category */}
+        {/*Blog Category*/}
         <div>
           <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-            Blog Category
+            Category
           </label>
-          <select
-      			name="categoryID"
-      			value={categoryID}
-      			onChange={onChange}
-      			className={`w-full px-4 py-3 rounded-lg border ${
-                  darkMode 
-                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                    : 'bg-white border-gray-300 text-gray-900'
-                } focus:outline-none focus:ring-2 focus:ring-purple-500`}
-      			required
-    			>
-    			  <option value="">-- Select Category --</option>
+          <select className={`w-full px-4 py-3 rounded-lg border ${
+            darkMode 
+              ? 'bg-gray-700 border-gray-600 text-white' 
+              : 'bg-white border-gray-300 text-gray-900'
+          } focus:outline-none focus:ring-2 focus:ring-purple-500`}
+            name="categoryID"
+            value={categoryID}
+            onChange={onChange}
+            required
+          >
+            <option>-- Select Category --</option>
             {categories?.map((cat) => (
               <option key={cat.id} value={cat.id}>
                 {cat.title}
               </option>
             ))}
-    			</select>
+          </select>
         </div>
-			 {/* Image */}
+        {/*Image Upload*/}
         <div>
           <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
             Featured Image
@@ -180,11 +167,11 @@ export default function WriteBlogModal({ isOpen, onClose }) {
           <div className={`border-2 border-dashed rounded-lg text-center ${
             darkMode ? 'border-gray-600' : 'border-gray-300'
           }`}>
-      			<input
+            <input
               type="file"
               accept="image/*"
-      	      multiple
-      	      id="name"
+              multiple
+              id="name"
               name="image"
               placeholder="Enter blog image..."
               onChange={handleImageUpload}
@@ -207,32 +194,34 @@ export default function WriteBlogModal({ isOpen, onClose }) {
               )}
           </div>
         </div>
-          {/* Rich Text Editor -- Blog Content */}
+        {/* Rich Text Editor -- Blog Content */}
           <div className="flex-1 overflow-y-auto">
             <ReactQuill
               theme="snow"
               name="content"
               value={content}
               onChange={handleContentChange}
-              placeholder="Write your blog content here..."
+              placeholder={`Hello ${user.username} Write your blog content here...`}
               // className="h-[300px] md:h-[400px]"
               className="h-full"
             />
           </div>
-          <div className="flex space-x-4">
+
+        <div className="flex space-x-4">
           <button type="submit" className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition font-medium">
             Publish Post
           </button>
-          <button type="button" onClick={onClose} className={`px-6 py-3 rounded-lg font-medium ${
+          <button type="button" className={`px-6 py-3 rounded-lg font-medium ${
             darkMode 
               ? 'bg-gray-700 text-white hover:bg-gray-600' 
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           } transition`}>
-            Cancel
+            Save as Draft
           </button>
         </div>
-        </form>
-      </div>
+      </form>
     </div>
   );
-}
+};
+
+export default CreatePostPage

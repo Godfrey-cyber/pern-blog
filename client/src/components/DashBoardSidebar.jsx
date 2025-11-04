@@ -4,16 +4,9 @@ import DashHeader from "../components/DashHeader.jsx"
 import RecentDashBlogs from "../components/RecentDashBlogs.jsx"
 import StatsCards from "../components/StatsCards.jsx"
 import RecentActivities from "../components/RecentActivities.jsx"
-import AllPostsPage from "../components/dashboard/AllPostsPage.jsx"
-import AnalyticsPage from "../components/dashboard/AnalyticsPage.jsx"
-import CategoriesPage from "../components/dashboard/CategoriesPage.jsx"
-import CreatePostPage from "../components/dashboard/CreatePostPage.jsx"
-import DashboardPage from "../components/dashboard/DashboardPage.jsx"
-import MediaLibraryPage from "../components/dashboard/MediaLibraryPage.jsx"
-import SettingsPage from "../components/dashboard/SettingsPage.jsx"
 import { LayoutDashboard, FileText, PenSquare, Image, Users, MessageSquare, Settings, BarChart3, Tag, Bell,ChevronLeft,ChevronRight, Search, LogOut, User, Moon, Sun, HelpCircle, Folder, ThumbsUp } from 'lucide-react'; 
 
-const DashBoard = () => {
+const DashBoardSidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [activeMenu, setActiveMenu] = useState('dashboard');
   const [darkMode, setDarkMode] = useState(false);
@@ -68,15 +61,12 @@ const DashBoard = () => {
           darkMode={darkMode}
           menuItems={menuItems}
         />
-        {/*<StatsCards darkMode={darkMode} />
+        <StatsCards darkMode={darkMode} />
       	<RecentDashBlogs darkMode={darkMode} />
-      	<RecentActivities darkMode={darkMode} />*/}
-        <div className={`p-8 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'} min-h-screen`}>
-          {renderContent()}
-        </div>
+      	<RecentActivities darkMode={darkMode} />
       </div>
     </div>
   );
 };
 
-export default DashBoard;
+export default DashBoardSidebar;

@@ -45,7 +45,7 @@ function App() {
     dispatch(fetchBlogs());
   }, [])
 
-  // fetch All blogs on page load
+  // fetch All categories on page load
   useEffect(() => {
     dispatch(fetchCategories());
   }, [])
