@@ -3,5 +3,5 @@ node_modules
 .env.*
 *.sh
 /generated/prisma
-logs/
-*.log
+logs/*.log
+logs/*.txt
