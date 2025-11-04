@@ -40,23 +40,23 @@ app.use(
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
   })
 )
-
+// Request Logger
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.originalUrl}`);
   next();
 });
 
-app.use((err, req, res, next) => {
-  logger.error(err.stack || err.message);
-  res.status(500).send("Something broke!");
-});
 logger.info("Server started");
 logger.error("An error occurred");
-
+// Routes
 app.use('/api/v1/users', userRoutes)
 app.use('/api/v1/blogs', blogRoutes)
 app.use('/api/v1/comment', commentRoutes)
 app.use('/api/v1/category', categoryRoutes)
+// 404 Handler
+app.use((req, res, next) => {
+  res.status(404).json({ msg: "Route not found" });
+});
 
 app.use(errorHandler)
 

@@ -13,3 +13,17 @@ export const fetchBlogs = async (signal) => {
     throw error; // rethrow for component to handle
   }
 };
+
+
+export const fetchBlog = async (signal, id) => {
+  try {
+    const res = await axiosInstance.get(`/blog/${id}`, { signal });
+    return res.data.data; // return only the blogs
+  } catch (error) {
+    if (axiosInstance.isCancel?.(error)) {
+      console.log("Request canceled");
+      return null;
+    }
+    throw error;
+  }
+};

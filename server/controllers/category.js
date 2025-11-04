@@ -1,5 +1,5 @@
 import { prisma } from "../models/prismaClient.js"
-import { redis } from "../redis/redisClient.js"
+import { redisClient, publisher } from "../redis/redisClient.js"
 import slugify from 'slugify'
 import { errorResponse, successResponse } from "../utiles/response.js"
 
@@ -40,18 +40,25 @@ export const createCategory = async (req, res, next) => {
 export const categories = async (req, res, next) => {
   const cacheKey = "categories:all";
   try {
-    const cachedCategories = await redis.get(cacheKey);
+    const cachedCategories = await redisClient.get(cacheKey);
     if (cachedCategories) {
       const categories = JSON.parse(cachedCategories);
       return successResponse(res, 200, "Category successfully fetched (from cache)", categories);
     }
-    const categories = await prisma.category.findMany();
+    const categories = await prisma.category.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 10,
+      include: {
+        authorID: true, title: true, description: true, slug: true, image: true,
+      }
+    });
     if (!categories || categories.length === 0) {
       return errorResponse(res, 404, "Categories not found")
     }
-    await redis.set(cacheKey, JSON.stringify(categories), "EX", 60);
+    await redisClient.set(cacheKey, JSON.stringify(categories), "EX", 60);
     return successResponse(res, 200, "Category successfully fetched", categories)
   } catch (error) {
     next(error)
   }
 };
+

@@ -36,13 +36,18 @@ model Blog {
   title         String
   description   String
   content       String
+  image         String?
   authorID      Int?
   author        User?         @relation(fields: [authorID], references: [id])
   categoryID    Int?
   category      Category?     @relation(fields: [categoryID], references: [id])
-  comments      Comment[]
+  comments      Comment[]     @relation(onDelete: CASCADE)
   slug          String        @unique
   createdAt     DateTime      @default(now())
+
+  @@index([title])
+  @@index([categoryID])
+  @@index([createdAt])
 }
 
 model Comment {
@@ -65,4 +70,14 @@ model Category {
   blogs         Blog[]
   author        User?         @relation(fields: [authorID], references: [id])
   createdAt     DateTime      @default(now())
+}
+
+model Like {
+  id     Int  @id @default(autoincrement())
+  userId Int
+  blogId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  blog   Blog @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, blogId])
 }

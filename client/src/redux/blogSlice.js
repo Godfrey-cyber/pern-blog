@@ -1,0 +1,44 @@
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+
+// Initial state
+const initialState = {
+	blog: null,
+	isFetching: false,
+	success: false,
+	error: null,
+};
+
+// Slice
+const blogSlice = createSlice({
+	name: 'blog',
+	initialState,
+	reducers: {
+		blogStart: state => {
+			state.error = false;
+			state.isFetching = true;
+			state.success = false;
+		},
+		blogSuccess: (state, action) => {
+			state.error = false;
+			state.blog = action.payload;
+			state.isFetching = false;
+			state.success = true;
+		},
+		blogFailure: (state, action) => {
+			state.error = action.payload;
+			state.isFetching = false;
+			state.success = false;
+		},
+		clearBlog: (state, action) => {
+			state.error = false;
+			state.blog = null;
+			state.isFetching = false;
+			state.success = false;
+		},
+	},
+});
+
+export const { blogStart, blogSuccess, blogFailure, clearBlog } = blogSlice.actions;
+export const selectBlog = state => state.blog.blog;
+
+export default blogSlice.reducer;
