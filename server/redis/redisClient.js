@@ -12,4 +12,4 @@ export const redisClient = new Redis(redisUrl)
 // errors
 publisher.on("error", (err) => console.error("Redis Publisher Error", err));
 subscriber.on("error", (err) => console.error("Redis Subscriber Error", err));
-redisClient.on("error", (err) => console.error("Redis Subscriber Error", err));
+redisClient.on("error", (err) => console.error("Redis Subscriber Error", err));s
