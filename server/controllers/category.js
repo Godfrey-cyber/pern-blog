@@ -48,8 +48,8 @@ export const categories = async (req, res, next) => {
     const categories = await prisma.category.findMany({
       orderBy: { createdAt: "desc" },
       take: 10,
-      include: {
-        authorID: true, title: true, description: true, slug: true, image: true,
+      select: {
+        id: true, authorID: true, title: true, description: true, slug: true, image: true,
       }
     });
     if (!categories || categories.length === 0) {
