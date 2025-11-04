@@ -12,9 +12,9 @@ COPY . .
 RUN mkdir -p logs
 
 # Generate Prisma client
-# RUN npx prisma generate --schema=prisma/schema.prisma
-CMD ["sh", "-c", "npx prisma migrate deploy --schema=prisma/schema.prisma && npm start"]
+RUN npx prisma generate --schema=prisma/schema.prisma
+
 
 EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+CMD ["sh", "-c", "npx prisma migrate deploy --schema=prisma/schema.prisma && npm start"]
