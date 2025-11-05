@@ -14,16 +14,9 @@ import { useDispatch, useSelector } from "react-redux"
 
 const LandingPage = () => {
 	const [isModalOpen2, setIsModalOpen2] = useState(false);
-	const { blogs, loading, error } = useSelector(state => state.blog);
+	const { blogs, isFetching, error } = useSelector(state => state.blog);
 
-	const navigate = useNavigate();
-	const dispatch = useDispatch();
-	useEffect(() => {
-	    // const controller = new AbortController();
-	    dispatch(fetchBlogs())
-	    // return () => controller.abort();
-	  }, [dispatch]);
-	if (loading) return <p>Loading blog...</p>;
+	if (isFetching) return <p>Loading blog...</p>;
 	return (
 		<div className="flex flex-col w-full h-screen w-full">
 			<BlogHeader setIsModalOpen2={setIsModalOpen2}/>
