@@ -13,7 +13,7 @@ export const signup = async (req, res, next) => {
     const hashed = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
       data: { username, email, password: hashed, role },
-      select: { id: true, username: true, email: true, role: true, password: false }
+      select: { id: true, username: true, email: true, role: true }
     });
     return successResponse(res, 201, "User registered successfully", user)
   } catch (error) {
@@ -55,7 +55,7 @@ export const login = async (req, res, next) => {
 export const users = async (req, res, next) => {
   const cacheKey = "users:all";
   try {
-    const cachedUsers = await redis.get(cacheKey);
+    const cachedUsers = await redisClient.get(cacheKey);
     if (cachedUsers) {
       const users = JSON.parse(cachedUsers);
       return successResponse(res, 200, "Users successfully fetched (from cache)", users);
@@ -64,7 +64,7 @@ export const users = async (req, res, next) => {
       select: { id: true, username: true, email: true, role: true, password: false },
     });
     if (!users) return errorResponse(res, 404, 'User not found');
-    await redis.set(cacheKey, JSON.stringify(users), "EX", 60);
+    await redisClient.set(cacheKey, JSON.stringify(users), "EX", 60);
     return successResponse(res, 200, "Users successfully fetched", users)
   } catch (error) {
     next(error)
