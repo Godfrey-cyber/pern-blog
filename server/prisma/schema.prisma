@@ -29,6 +29,7 @@ model User {
   blogs         Blog[]
   role          Role          @default(USER)
   createdAt     DateTime      @default(now())
+  likes         Like[]
 }
 
 model Blog {
@@ -44,6 +45,7 @@ model Blog {
   comments      Comment[]     @relation(onDelete: CASCADE)
   slug          String        @unique
   createdAt     DateTime      @default(now())
+  likes         Like[]
 
   @@index([title])
   @@index([categoryID])
@@ -56,7 +58,7 @@ model Comment {
   authorID      Int
   author        User          @relation(fields: [authorID], references: [id])
   createdAt     DateTime      @default(now())
-  blog          Blog          @relation(fields: [blogID], references: [id])
+  blog          Blog          @relation(fields: [blogID], references: [id], onDelete: Cascade)
   blogID        Int
 }
 
@@ -73,11 +75,12 @@ model Category {
 }
 
 model Like {
-  id     Int  @id @default(autoincrement())
-  userId Int
-  blogId Int
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  blog   Blog @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  id        Int  @id @default(autoincrement())
+  userId    Int
+  blogId    Int
+  createdAt DateTime @default(now())
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  blog      Blog @relation(fields: [blogId], references: [id], onDelete: Cascade)
   
   @@unique([userId, blogId])
 }

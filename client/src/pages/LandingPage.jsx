@@ -6,14 +6,18 @@ import { useNavigate } from 'react-router-dom';
 import { axiosInstance } from '../utilities/utiles.js';
 import LoadingBlog from "../components/LoadingBlog.jsx"
 import BlogHeader from "../components/BlogHeader.jsx"
-import { fetchBlogs } from "../services/blogService.js"
+import FrontPage from "../components/FrontPage.jsx"
+import Feed from "../components/Feed.jsx"
+import Footer from "../components/Footer.jsx"
+import { fetchBlogs } from "../redux/blogThunk.js"
+import { useDispatch, useSelector } from "react-redux"
 
 const LandingPage = () => {
 	const [isModalOpen2, setIsModalOpen2] = useState(false);
 	const { blogs, loading, error } = useSelector(state => state.blog);
-	const dispatch = useDispatch();
-	const navigate = useNavigate();
 
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
 	useEffect(() => {
 	    // const controller = new AbortController();
 	    dispatch(fetchBlogs())

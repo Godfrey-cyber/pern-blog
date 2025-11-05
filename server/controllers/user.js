@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs"
 import { prisma } from "../models/prismaClient.js"
-import { Role } from "@prisma/client"
+import pkg from "@prisma/client";
+const { Role } = pkg;
 import { redisClient, publisher } from "../redis/redisClient.js"
 import jwt from "jsonwebtoken"
 import { createAccessToken, createRefreshToken, randomTokenId } from "../utiles/utiles.js"

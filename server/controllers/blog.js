@@ -1,5 +1,4 @@
 import { prisma } from "../models/prismaClient.js"
-import { redis } from "../redis/redisClient.js"
 import { publishNewBlog, publishUpdatedBlog } from "../redis/publisher.js"
 import slugify from 'slugify'
 import { errorResponse, successResponse } from "../utiles/response.js"

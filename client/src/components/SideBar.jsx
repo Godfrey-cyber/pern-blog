@@ -209,7 +209,7 @@ const SideBar = ({ collapsed, setCollapsed, activeMenu, setActiveMenu, darkMode,
                 ? 'hover:bg-gray-700 text-gray-400 hover:text-white'
                 : 'hover:bg-gray-100 text-gray-600 hover:text-gray-900'
             } transition`}>
-              <LogOut className="cursor-pointer" onClick={handleLogout} className="w-4 h-4" />
+              <LogOut className="cursor-pointer w-4 h-4" onClick={handleLogout} />
             </button>
           )}
         </div>

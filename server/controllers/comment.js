@@ -1,5 +1,4 @@
 import { prisma } from "../models/prismaClient.js"
-import { redis } from "../redis/redisClient.js"
 import { publishNewComment } from "../redis/publisher.js"
 import { publisher, redisClient } from "../redis/redisClient.js"
 import { errorResponse, successResponse } from "../utiles/response.js"
