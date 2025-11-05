@@ -50,13 +50,14 @@ const BlogPost = () => {
 								<div className="h-10 w-1/2 bg-gray-400 rounded-lg blur-sm mb-3"></div>
 							</div>
 							) : (
-								<motion.h2
-						            key={cat.id}
-						            className="text-3xl font-bold text-black hover:text-amber-500"
-						            initial={{ opacity: 0, y: 15 }}
-						            animate={{ opacity: 1, y: 0 }}
-						            transition={{ delay: i * 0.15, duration: 0.4, ease: "easeOut" }}
-						          >{blog?.title}</motion.h2>
+							<motion.h2
+					            key={blog?.id}
+					            className="text-3xl font-bold text-black hover:text-amber-500"
+					            initial={{ opacity: 0, y: 15 }}
+					            animate={{ opacity: 1, y: 0 }}
+					            transition={{ delay: 0.15, duration: 0.4, ease: "easeOut" }}
+					          >{blog?.title}
+					        </motion.h2>
 						)}						
 					</span>
 					{!blog || isLoading ? (
