@@ -36,4 +36,4 @@ const Comments = ({ user }) => {
 	)
 }
 
-export default Comments // Elon  Musk is one of the most innovative and forward thinking person in the 21st century.
+export default Comments
