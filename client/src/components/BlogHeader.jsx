@@ -18,14 +18,7 @@ const BlogHeader = ({ title = "My Blog" }) => {
 	const [activeSection, setActiveSection] = useState("home");
 	const [open, setOpen] = useState(false);
 	const { user, accessToken, loading } = useSelector(state => state.auth);
-
-	const links = [
-	    { name: "MARKET", id: "market" },
-	    { name: "LEADERS", id: "leaders" },
-	    { name: "CAREERS", id: "career" },
-	    { name: "LIFESTYLE", id: "lifestyle" },
-	    { name: "CONTACT", id: "contact" },
-	];
+  
 	useEffect(() => {
     const handleScroll = () => {
       const sections = links.map(link => document.getElementById(link.id));
