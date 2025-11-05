@@ -1,8 +1,10 @@
 import { prisma } from "../models/prismaClient.js"
+import { publishNewBlog, publishUpdatedBlog } from "../redis/publisher.js"
 import slugify from 'slugify'
 import { errorResponse, successResponse } from "../utiles/response.js"
 import { publisher, redisClient } from "../redis/redisClient.js"
 
+// const publisher = redis;
 // @POST - create a blog
 export const createBlog = async (req, res, next) => {
   const { description, title, content, categoryID, image } = req.body;
@@ -178,7 +180,6 @@ export const myBlogs = async (req, res, next) => {
     await redisClient.set(cacheKey, JSON.stringify(blogs), "EX", 60);
     return successResponse(res, 200, "Your Blogs successfully fetched", blogs)
   } catch (error) {
-    console.log(error)
     next(error)
   }
 }

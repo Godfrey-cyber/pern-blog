@@ -1,7 +1,9 @@
 import { prisma } from "../models/prismaClient.js"
+import { publishNewComment } from "../redis/publisher.js"
 import { publisher, redisClient } from "../redis/redisClient.js"
 import { errorResponse, successResponse } from "../utiles/response.js"
 
+const publisher = redis
 export const comment = async (req, res, next) => {
   const { content } = req.body;
   const { blogId } = req.params;

@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux"
 const LandingPage = () => {
 	const [isModalOpen2, setIsModalOpen2] = useState(false);
 	const { blogs, loading, error } = useSelector(state => state.blog);
+
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	useEffect(() => {
