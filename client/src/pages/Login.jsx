@@ -1,26 +1,14 @@
 import React, { useState } from 'react'
 //packages
-<<<<<<< HEAD
-import { FaRegUserCircle } from "react-icons/fa";
-import { ToastContainer, toast } from 'react-toastify';
-// files
-=======
 import { MdOutlineChevronLeft, MdOutlineChevronRight } from 'react-icons/md';
 import { useNavigate, Link } from 'react-router-dom';
 import { FaRegUserCircle } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 // files
-// import { loginUser } from "../services/userService.js"
->>>>>>> development
 import { useDispatch, useSelector } from 'react-redux';
 import { loginStart, loginFailure, loginSuccess } from '../redux/userSlice.js';
 import { axiosInstance } from "../utilities/utiles.js"
 import { loginUser } from "../redux/authThunk.js"
-<<<<<<< HEAD
-import { MdOutlineChevronLeft, MdOutlineChevronRight } from 'react-icons/md';
-import { useNavigate, Link } from 'react-router-dom';
-=======
->>>>>>> development
 
 const Login = () => {
 	const navigate = useNavigate();
