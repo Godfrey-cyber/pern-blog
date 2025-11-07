@@ -37,7 +37,7 @@ const BlogPost = () => {
 					<span className="flex flex-col space-y-1">
 						{!blog || isLoading ? (
 							<div className="animate-pulse">
-								<div className="h-6 w-1/3 bg-gray-400 rounded-lg blur-sm mb-3"></div>
+								<div className="h-6 w-1/3 rounded-md skeleton mb-3"></div>
 							</div>
 							) : (
 							<Link to={`/category/${blog?.category?.slug}/${blog?.category?.id}`}>
@@ -47,7 +47,7 @@ const BlogPost = () => {
 
 						{!blog || isLoading ? (
 							<div className="animate-pulse">
-								<div className="h-10 w-1/2 bg-gray-400 rounded-lg blur-sm mb-3"></div>
+								<div className="h-10 w-1/2 rounded-md skeleton mb-3"></div>
 							</div>
 							) : (
 							<motion.h2
@@ -64,17 +64,35 @@ const BlogPost = () => {
 						<span className="h-80 min-h-[400px] max-h-[450px] skeleton mb-3"></span>
 						) : (
 						<Link to={`/blog/${blog?.slug}/${blog?.id}`}>
-							<img src={blog?.image} alt="" className="h-80 min-h-[400px] max-h-[400px] object-cover" />
+							{blog && <img src={blog?.image} alt="" className="h-80 min-h-[400px] max-h-[400px] object-cover" />}
 						</Link>
 					)}
 					
 					{/* ----- author details ----- */}
 					<div className="flex flex-row space-x-3 my-4">
-						<span className="flex flex-col items-center justify-center w-10 h-10 rounded-full bg-gray-200 border-2 border-amber-500 text-lg font-semibold text-gray-400">{blog?.author?.username?.split(" ")[0].charAt(0)}</span>
-						<span className="flex flex-col space-y-1">
-							<p className="text-gray-700 font-semibold text-xs ">By {blog?.author?.username}</p>
-							<p className="text-gray-700 font-semibold text-xs ">Published on {blog && formatDate(blog?.createdAt)}</p>
-						</span>
+					  {isLoading ? (
+					    <>
+					      <div className="w-10 h-10 rounded-full skeleton"></div>
+					      <div className="flex flex-col space-y-2">
+					        <div className="h-3 w-24 rounded skeleton"></div>
+					        <div className="h-3 w-32 rounded skeleton"></div>
+					      </div>
+					    </>
+					  ) : (
+					    <>
+					      <span className="flex flex-col items-center justify-center w-10 h-10 rounded-full bg-gray-200 border-2 border-amber-500 text-lg font-semibold text-gray-400">
+					        {blog?.author?.username?.split(" ")[0].charAt(0)}
+					      </span>
+					      <span className="flex flex-col space-y-1">
+					        <p className="text-gray-700 font-semibold text-xs">
+					          By {blog?.author?.username}
+					        </p>
+					        <p className="text-gray-700 font-semibold text-xs">
+					          Published on {blog && formatDate(blog?.createdAt)}
+					        </p>
+					      </span>
+					    </>
+					  )}
 					</div>
 					{/* ----- blog ----- */}
 					<div className="flex flex-col space-y-3 text-sm leading-8 font-normal text-gray-800" dangerouslySetInnerHTML={{ __html: blog?.content }} />
@@ -83,18 +101,40 @@ const BlogPost = () => {
 					<div className="col-span-3 flex flex-col p-4 h-full rounded-md">
 						<p className="text-black font-bold p-3">TRENDING NOW</p>
 						<div className="flex flex-col space-y-6">
-							{blogs?.slice(0, 4).map(blog => (
-								<Link key={blog.id} to={`/blog/${blog.slug}/${blog.id}`}>
-									<span className="front-span">
-										<p className="front-p">{trimString(blog.title, 60)}</p>
-										<p className="front-time">
-											<TimeAgo className="text-gray-500 text-xs font-semibold" date={blog.createdAt} 
-											formatter={(value, unit, suffix) => `${value} ${unit}${value > 1 ? "s" : ""} ${suffix}`}
-											/>
-										</p>
-									</span>
-								</Link>
-							))}
+							{isFetching ? (
+						      // 🪄 Shimmer placeholder while loading
+						      Array.from({ length: 4 }).map((_, i) => (
+						        <div key={i} className="flex flex-col space-y-2 animate-pulse">
+						          <div className="h-8 w-full skeleton rounded"></div>
+						          <div className="h-6 w-3/4 skeleton rounded"></div>
+						        </div>
+						      ))
+						    ) : (
+						    blogs.slice(1, 5).map((blog, index) => (
+						        <Link key={blog.id} to={`/blog/${blog.slug}/${blog.id}`}>
+						          <span className="front-span">
+						            <motion.p
+						              className="front-p"
+						              initial={{ opacity: 0, y: 10 }}
+						              animate={{ opacity: 1, y: 0 }}
+						              transition={{ delay: index * 0.1, duration: 0.4 }}
+						            >
+						              {trimString(blog.title, 60)}
+						            </motion.p>
+						            <motion.div
+						              initial={{ opacity: 0 }}
+						              animate={{ opacity: 1 }}
+						              transition={{ delay: 0.3 + index * 0.1 }}
+						            >
+						              <TimeAgo
+						                className="text-gray-500 text-xs font-semibold"
+						                date={blog.createdAt}
+						              />
+						            </motion.div>
+						          </span>
+						        </Link>
+						      ))
+						    )}
 						</div>
 					</div>
 				</div>

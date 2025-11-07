@@ -16,7 +16,7 @@ const FrontPage = () => {
 							<span className="flex flex-col space-y-1">
 							{isFetching ? (
 								<div className="animate-pulse">
-									<div className="h-6 w-1/3 bg-gray-400 rounded-lg blur-sm mb-3"></div>
+									<div className="h-6 w-1/3 skeleton mb-3"></div>
 								</div>
 								) : (
 								<Link to={`/category/${blogs[0]?.category?.slug}/${blogs[0]?.category?.id}`}>
@@ -25,14 +25,14 @@ const FrontPage = () => {
 							)}
 								{isFetching ? (
 								<div className="animate-pulse">
-									<div className="h-10 w-1/2 bg-gray-400 rounded-lg blur-sm mb-3"></div>
+									<div className="h-10 w-1/2 skeleton mb-3"></div>
 								</div>
 								) : (
 									<p className="text-3xl font-bold text-black hover:text-amber-500">{blogs[0]?.title}</p>
 								)}
 							</span>
 							{isFetching ? (
-								<span className="h-80 min-h-[400px] max-h-[450px] bg-gray-300 rounded-lg blur-sm mb-2"></span>
+								<span className="h-80 min-h-[400px] max-h-[450px] rounded-lg skeleton mb-2"></span>
 								) : (
 								<Link to={`/blog/${blogs[0]?.slug}/${blogs[0]?.id}`}>
 									{blogs && <img src={blogs[0]?.image} alt="" className="h-80 min-h-[400px] max-h-[450px] object-cover" />}
@@ -117,15 +117,6 @@ const FrontPage = () => {
 					      </Link>
 					    ))
 					  )}
-
-						{/*{blogs.slice(6, 9).map(blog => (
-							<Link key={blog.id} to={`/blog/${blog.slug}/${blog.id}`}>
-								<span className="flex flex-col space-y-2 w-52 md:w-72 h-full cursor-pointer">
-									<img src={blog.image} alt="" className="h-36 w-52 w-full object-cover" />
-									<p className="front-p">{trimString(blog.title, 70)}</p>
-								</span>
-							</Link>
-						))}*/}
 					</div>
 				</div>
 			</div>
@@ -152,4 +143,3 @@ const FrontPage = () => {
 }
 
 export default FrontPage
-// https://assets.citizen.digital/wp-content/uploads/2021/10/4003/conversions/knife-pinned.jpg
