@@ -11,6 +11,7 @@ import { axiosInstance } from "../utilities/utiles.js"
 import { loginUser } from "../redux/authThunk.js"
 
 const Login = () => {
+	console.log("🔄 Login component rendered");
 	const navigate = useNavigate();
 	const [loginData, setLoginData] = useState({
 		email: '',
@@ -30,8 +31,10 @@ const Login = () => {
 	const resetForm = () => setLoginData({ email: "", password: "" });
 
 	const handleSubmit = (event) => {
+		console.log("🚀 handleSubmit called");
 		event.preventDefault();
 		if (email && password) {
+			 console.log("✅ Dispatching loginUser");
 		    dispatch(loginUser({ email, password }, navigate, toast));
 		    resetForm();
 	  	} else {
@@ -43,11 +46,11 @@ const Login = () => {
 			<div className="reg-div relative">
 				{/*<FaRegUserCircle className="signup-icon" /> */}
 				<p className="flex text-2xl font-light text-gray-800 flex items-center p-2">LogIn.</p>
-				<form className="flex flex-col space-y-6 w-4/5">
+				<form onSubmit={handleSubmit} className="flex flex-col space-y-6 w-4/5">
 					<span className="input-span">
 						<input
 							onChange={onChange}
-							// value={email}
+							value={email}
 							type="email"
 							name="email"
 							id="email"
@@ -67,9 +70,8 @@ const Login = () => {
 						/>
 					</span>
 					<button 
-							onClick={handleSubmit}
 							type="submit"
-							// disabled={loading}
+							disabled={loading}
 							className="bg-orange-400 text-white rounded-md text-xs font-semibold w-full h-12 px-3 py-2 cursor-pointer"
 						>
 							{loading ? "Logging..." : "Log In"}

@@ -14,12 +14,13 @@ const blogSlice = createSlice({
 	initialState,
 	reducers: {
 		blogStart: state => {
-			state.isError = false;
+			state.isError = null;
 			state.isLoading = true;
 			state.success = false;
+			state.blog = null;
 		},
 		blogSuccess: (state, action) => {
-			state.isError = false;
+			state.isError = null;
 			state.blog = action.payload;
 			state.isLoading = false;
 			state.success = true;
@@ -29,8 +30,8 @@ const blogSlice = createSlice({
 			state.isLoading = false;
 			state.success = false;
 		},
-		clearBlog: (state, action) => {
-			state.isError = false;
+		clearBlog: (state) => {
+			state.isError = null;
 			state.blog = null;
 			state.isLoading = false;
 			state.success = false;

@@ -21,7 +21,9 @@ axiosInstance.interceptors.response.use(
   async error => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    const isAuthEndpoint = originalRequest.url?.includes('/users/login') || originalRequest.url?.includes('/users/signup') ||originalRequest.url?.includes('/users/refresh');
+
+    if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint) {
       originalRequest._retry = true;
       try {
         const refreshResponse = await axiosInstance.get("/users/refresh");
@@ -31,6 +33,7 @@ axiosInstance.interceptors.response.use(
         return axiosInstance(originalRequest); // retry request
       } catch (err) {
         store.dispatch(logout());
+        return Promise.reject(err);
       }
     }
 

@@ -14,6 +14,7 @@ export const logoutUser = () => async dispatch => {
 
 // @User login
 export const loginUser = (loginData, navigate, toast) => async dispatch => {
+  console.log("🔥 LOGIN THUNK CALLED", new Date().toISOString());
 	dispatch(loginStart());
 	try {
 		const res = await axiosInstance.post("/users/login", loginData);
@@ -22,7 +23,8 @@ export const loginUser = (loginData, navigate, toast) => async dispatch => {
 		toast.success("Successfully Logged in🥇");
 	} catch (error) {
 		dispatch(loginFailure(error.response?.data?.msg || "Login failed"));
-		toast.error(error?.response?.data?.msg || "Login failed. Try again.");
+    console.log(error)
+		toast.error(error?.response?.data.error || "Login failed. Try again.");
 	}
 }
 // @User register

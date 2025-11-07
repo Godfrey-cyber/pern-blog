@@ -19,20 +19,20 @@ const BlogHeader = ({ title = "My Blog" }) => {
 	const [open, setOpen] = useState(false);
 	const { user, accessToken, loading } = useSelector(state => state.auth);
 
-	useEffect(() => {
-    const handleScroll = () => {
-      const sections = links.map(link => document.getElementById(link.id));
-      const current = sections.find(
-        (section) =>
-          section &&
-          window.scrollY >= section.offsetTop - 100 &&
-          window.scrollY < section.offsetTop + section.offsetHeight
-      );
-      if (current) setActiveSection(current.id);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+	// useEffect(() => {
+  //   const handleScroll = () => {
+  //     const sections = links.map(link => document.getElementById(link.id));
+  //     const current = sections.find(
+  //       (section) =>
+  //         section &&
+  //         window.scrollY >= section.offsetTop - 100 &&
+  //         window.scrollY < section.offsetTop + section.offsetHeight
+  //     );
+  //     if (current) setActiveSection(current.id);
+  //   };
+  //   window.addEventListener("scroll", handleScroll);
+  //   return () => window.removeEventListener("scroll", handleScroll);
+  // }, []);
 
 	const handleLogout = () => {
 	    dispatch(logoutUser());

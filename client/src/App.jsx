@@ -37,8 +37,10 @@ function App() {
 
   useEffect(() => {
     // On initial load, check if the user is authenticated
-    dispatch(refreshUser());
-  }, [dispatch, isAuthenticated]);
+    if (isAuthenticated === null || isAuthenticated === undefined) {
+      dispatch(refreshUser());
+    }
+  }, [dispatch]);
 
   // fetch All blogs on page load
   useEffect(() => {

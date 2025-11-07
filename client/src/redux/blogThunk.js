@@ -22,7 +22,9 @@ export const fetchBlogById = (id) => async dispatch => {
 	dispatch(blogStart());
 	try {
 		const res = await axiosInstance.get(`/blogs/blog/${id}`);
-		dispatch(blogSuccess(res.data));
+    const blogData = res.data.data ? res.data.data : res.data;
+		dispatch(blogSuccess(blogData));
+    console.log("res.data:", res.data);
 	} catch (error) {
     dispatch(blogFailure(error?.response?.data?.msg || "Failed to fetch blog"));
     console.log(error)
