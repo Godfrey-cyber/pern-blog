@@ -30,7 +30,7 @@ export const rateLimit = async(req, res, next) => {
     if (requests === 1) {
       await redisClient.expire(key, 60); // 1 min window
     }
-    if (requests > 10) {
+    if (requests > 30) {
       return res.status(429).json({ error: "Too many requests, slow down!" });
     }
     return next()
