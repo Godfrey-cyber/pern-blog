@@ -2,11 +2,6 @@ import { RedisStore } from "connect-redis"
 import session from "express-session"
 import { redisClient } from "./redisClient.js"
 
-// Ensure Redis client is connected before creating store
-await redisClient.connect().catch(err => {
-  console.error("Redis connection error:", err);
-});
-
 const store = new RedisStore({
   client: redisClient,
   prefix: "sess:",
