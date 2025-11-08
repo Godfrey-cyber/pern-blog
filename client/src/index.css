@@ -59,7 +59,7 @@
     }
     /*  FRONT PAGE  */
     .feed {
-        @apply flex flex-col w-full px-5 md:px-10 lg:px-20 my-4
+        @apply flex flex-col w-full px-3 md:px-10 lg:px-20 my-4
     }
     .front-1 {
         @apply grid grid-cols-12 gap-4 w-full h-fit px-5 md:px-10 lg:px-20 mt-20

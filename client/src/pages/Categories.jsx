@@ -53,13 +53,13 @@ const Categories = () => {
 				        >
 				            <Link
 				              to={`/blog/${slug}/${id}`}
-				              className="col-span-3 h-44 object-fit"
+				              className="col-span-4 h-20 w-full object-cover"
 				            >
 				              <img src={image} alt="" className="flex h-full w-full object-cover rounded-md" />
 				            </Link>
 
 
-				            <div className="col-span-9 flex flex-col space-y-4">
+				            <div className="col-span-8 flex flex-col space-y-2 md:space-y-3 lg:space-y-4">
 				                <span className="flex items-center flex-row space-x-3">
 				                    <p className="text-sm font-semibold text-amber-500">{category?.title}</p>
 				                </span>
@@ -67,8 +67,8 @@ const Categories = () => {
 					              	to={`/blog/${slug}/${id}`}
 					          	>
 					              <span className="flex flex-col space-y-3">
-					                <p className="text-2xl font-bold text-black">{title}</p>
-					                <p className="text-sm font-normal text-black">{description}</p>
+					                <p className="text-sm md:text-lg lg:text-2xl font-bold text-black">{title}</p>
+					                <p className="hidden md:text-sm font-normal text-black">{description}</p>
 					                <span className="flex items-center flex-row space-x-3">
 					                  <p className="text-gray-500 text-xs font-semibold">{author?.username} — </p>
 					                  <TimeAgo className="text-gray-500 text-xs font-semibold" date={createdAt} />
