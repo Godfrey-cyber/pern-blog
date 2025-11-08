@@ -1,6 +1,5 @@
 import Redis from "ioredis"
 
-
 const redisConfig = process.env.REDIS_URL 
   ? process.env.REDIS_URL 
   : {
@@ -8,10 +7,6 @@ const redisConfig = process.env.REDIS_URL
       port: process.env.REDIS_PORT || 6379,
       password: process.env.REDIS_PASSWORD,
     };
-
-
-// export const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
-// const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
 
 // Publisher
 export const publisher = new Redis(redisConfig);
