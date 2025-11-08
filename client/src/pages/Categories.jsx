@@ -22,11 +22,11 @@ const Categories = () => {
 	return (
 		<div className="flex flex-col w-full">
 		 	<BlogHeader />
-		 	<div className="feed space-y-6 mt-30 w-full lg:w-4/5">
+		 	<div className="feed space-y-6 mt-28 w-full lg:w-4/5">
 
 
 			 	{isFetching ? 
-			 	(<div className="animate-pulse space-y-6 mt-30 w-full lg:w-4/5">
+			 	(<div className="animate-pulse space-y-6 w-full lg:w-4/5">
 				    {Array(6).fill().map((_, i) => (
 				    <div key={i} className="grid grid-cols-12 gap-4 rounded-md w-full">
 				        <div className="col-span-4 h-20 md:h-44 w-full skeleton rounded"></div>
