@@ -29,8 +29,8 @@ const Categories = () => {
 			 	(<div className="animate-pulse space-y-6 mt-30 w-full lg:w-4/5">
 				    {Array(6).fill().map((_, i) => (
 				    <div key={i} className="grid grid-cols-12 gap-4 rounded-md w-full">
-				        <div className="col-span-3 h-44 skeleton rounded"></div>
-				        <div className="col-span-9 flex flex-col space-y-4">
+				        <div className="col-span-4 h-20 md:h-44 w-full skeleton rounded"></div>
+				        <div className="col-span-8 flex flex-col space-y-4">
 				          <div className="h-4 w-1/2 skeleton rounded"></div>
 				          <div className="h-6 w-3/4 skeleton rounded"></div>
 				          <div className="h-4 w-2/3 skeleton rounded"></div>
@@ -51,15 +51,14 @@ const Categories = () => {
 				          transition={{ duration: 0.5 }}
 				          className="grid grid-cols-12 gap-4 rounded-md"
 				        >
-				            <Link
-				              to={`/blog/${slug}/${id}`}
-				              className="col-span-4 h-20 w-full object-cover"
-				            >
-				              <img src={image} alt="" className="flex h-full w-full object-cover rounded-md" />
-				            </Link>
-
-
-				            <div className="col-span-8 flex flex-col space-y-2 md:space-y-3 lg:space-y-4">
+				            <span className="col-span-4 h-20 md:h-44 w-full object-cover">
+				            	<Link to={`/blog/${slug}/${id}`}
+					              className=""
+					            >
+				              		<img src={image} alt="" className="flex h-full w-full object-cover rounded-md" />
+				              </Link>
+				            </span>
+				            <div className="col-span-8 flex flex-col space-y-1 md:space-y-3 lg:space-y-4">
 				                <span className="flex items-center flex-row space-x-3">
 				                    <p className="text-sm font-semibold text-amber-500">{category?.title}</p>
 				                </span>

@@ -19,20 +19,20 @@ const BlogHeader = ({ title = "My Blog" }) => {
 	const [open, setOpen] = useState(false);
 	const { user, accessToken, loading } = useSelector(state => state.auth);
 
-	// useEffect(() => {
-  //   const handleScroll = () => {
-  //     const sections = links.map(link => document.getElementById(link.id));
-  //     const current = sections.find(
-  //       (section) =>
-  //         section &&
-  //         window.scrollY >= section.offsetTop - 100 &&
-  //         window.scrollY < section.offsetTop + section.offsetHeight
-  //     );
-  //     if (current) setActiveSection(current.id);
-  //   };
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => window.removeEventListener("scroll", handleScroll);
-  // }, []);
+	useEffect(() => {
+    const handleScroll = () => {
+      const sections = links.map(link => document.getElementById(link.id));
+      const current = sections.find(
+        (section) =>
+          section &&
+          window.scrollY >= section.offsetTop - 100 &&
+          window.scrollY < section.offsetTop + section.offsetHeight
+      );
+      if (current) setActiveSection(current.id);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
 	const handleLogout = () => {
 	    dispatch(logoutUser());
@@ -65,7 +65,7 @@ const BlogHeader = ({ title = "My Blog" }) => {
 
             {/* Left: blob toggle + title */}
             <LeftBlob blobButtonVariants={blobButtonVariants} sidebarVariants={sidebarVariants} 
-backdropVariants={backdropVariants} open={open} setOpen={setOpen} />
+              backdropVariants={backdropVariants} open={open} setOpen={setOpen} />
 
             {/* Right: search and profile */}
             <div className="flex items-center gap-3">
@@ -123,7 +123,7 @@ backdropVariants={backdropVariants} open={open} setOpen={setOpen} />
                 </div>
               </div>
 
-              <SidebarMenu categories={categories} />
+              <SidebarMenu setOpen={setOpen} categories={categories} />
 
               <div className="mt-6">
                 <h3 className="text-xs text-white/60 uppercase mb-3">Recently viewed</h3>
