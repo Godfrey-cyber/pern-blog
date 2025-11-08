@@ -96,8 +96,43 @@ const BlogPost = () => {
 					  )}
 					</div>
 					{/* ----- blog ----- */}
-					<div className="flex flex-col space-y-3 text-sm leading-8 font-normal text-gray-800" dangerouslySetInnerHTML={{ __html: blog?.content }} />
+					{/*<div className="flex flex-col space-y-3 text-sm leading-8 font-normal text-gray-800" dangerouslySetInnerHTML={{ __html: blog?.content }} />*/}
+
+
+
+					{isLoading ? (
+				        <div className="space-y-3 my-8">
+				          <div className="h-4 w-full rounded skeleton"></div>
+				          <div className="h-4 w-11/12 rounded skeleton"></div>
+				          <div className="h-4 w-10/12 rounded skeleton"></div>
+				          <div className="h-4 w-3/4 rounded skeleton"></div>
+				          <div className="h-4 w-4/5 rounded skeleton"></div>
+				          <div className="h-4 w-4/5 rounded skeleton"></div>
+				          <div className="h-4 w-10/12 rounded skeleton"></div>
+				          <div className="h-4 w-10/12 rounded skeleton"></div>
+				          <div className="h-4 w-3/4 rounded skeleton"></div>
+				          <div className="h-4 w-11/12 rounded skeleton"></div>
+				          <div className="h-4 w-10/12 rounded skeleton"></div>
+				          <div className="h-4 w-3/4 rounded skeleton"></div>
+				          <div className="h-4 w-4/5 rounded skeleton"></div>
+				          <div className="h-4 w-4/5 rounded skeleton"></div>
+				          <div className="h-4 w-10/12 rounded skeleton"></div>
+				          <div className="h-4 w-10/12 rounded skeleton"></div>
+				        </div>
+				      ) : (
+				        <motion.div
+				          className="flex flex-col space-y-3 text-sm leading-8 font-normal text-gray-800 leading-relaxed"
+				          initial={{ opacity: 0, y: 10 }}
+				          animate={{ opacity: 1, y: 0 }}
+				          transition={{ duration: 0.6 }}
+				          dangerouslySetInnerHTML={{ __html: blog?.content }}
+				        />
+				    )}
+
+
+
 				</div>
+				{/*{------- TRENDING NOW ----------}*/}
 				<div className="hidden md:col-span-3 md:flex flex-col p-4 h-full rounded-md">
 					<div className="col-span-3 flex flex-col p-4 h-full rounded-md">
 						<p className="text-black font-bold p-3">TRENDING NOW</p>

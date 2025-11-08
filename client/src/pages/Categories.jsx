@@ -6,45 +6,82 @@ import { blogsByCategory } from "../redux/blogThunk.js"
 import { formatDate, trimString } from "../utilities/utiles.js"
 import { useDispatch, useSelector } from "react-redux"
 import BlogHeader from "../components/BlogHeader.jsx"
+import { motion } from "framer-motion";
 import Footer from "../components/Footer.jsx"
 
 const Categories = () => {
 	const navigation = useNavigate()
 	const dispatch = useDispatch()
-	const { blogsByCat, loading, error } = useSelector(state => state.blogsByCat);
+	const { blogsByCat, loading, error, isFetching } = useSelector(state => state.blogsByCat);
 	const { id, slug } = useParams();
 	useEffect(() => {
 	    if (!id) return;
 	    dispatch(blogsByCategory(id))
 	  }, [id, dispatch]);
-	if (loading) return <p className="text-2xl font-bold-red-gray-500 w-screen h-screen flex items-center justify-center">Loading blog...</p>;
-	if (blogsByCat.length === 0) return <p className="text-2xl font-bold-red-gray-500 w-screen h-screen flex items-center justify-center">Loading</p>
+	
 	return (
-		<div className="flex flex-col h-min-screen w-full">
+		<div className="flex flex-col w-full">
 		 	<BlogHeader />
 		 	<div className="feed space-y-6 mt-30 w-full lg:w-4/5">
-				{blogsByCat?.blogs?.slice(0, 6).map(({id, slug, title, description, image, createdAt, author, category}) => (
-					<Link to={`/blog/${slug}/${id}`} key={id || slug}>
-						<div className="grid grid-cols-12 gap-4 rounded-md">
-							<img src={image} alt="" className="col-span-3 h-44 object-fit" />
-							<div className="col-span-9 flex flex-col space-y-4">
-								<span className="flex items-center flex-row space-x-3">
-									<p className="text-sm font-semibold text-amber-500">{category?.title}</p>
-								</span>
-								<span className="flex flex-col space-y-3">
-									<p className="text-2xl font-bold text-black">{title}</p>
-									<p className="text-sm font-normal text-black">{description}</p>
-									<span className="flex items-center flex-row space-x-3">
-										<p className="text-gray-500 text-xs font-semibold">{author?.username} —</p>
-										<TimeAgo className="text-gray-500 text-xs font-semibold" date={createdAt} />
-									</span>
-								</span>
-							</div>
-						</div>
-					</Link>
-				))}
-			</div>
-			<Footer />			
+
+
+			 	{isFetching ? 
+			 	(<div className="animate-pulse space-y-6 mt-30 w-full lg:w-4/5">
+				    {Array(6).fill().map((_, i) => (
+				    <div key={i} className="grid grid-cols-12 gap-4 rounded-md w-full">
+				        <div className="col-span-3 h-44 skeleton rounded"></div>
+				        <div className="col-span-9 flex flex-col space-y-4">
+				          <div className="h-4 w-1/2 skeleton rounded"></div>
+				          <div className="h-6 w-3/4 skeleton rounded"></div>
+				          <div className="h-4 w-2/3 skeleton rounded"></div>
+				          <div className="flex space-x-3">
+				            <div className="h-3 w-16 skeleton rounded"></div>
+				            <div className="h-3 w-24 skeleton rounded"></div>
+				          </div>
+				        </div>
+				    </div>
+					))}
+				</div>
+				) : (
+					blogsByCat?.blogs?.slice(0, 6).map(({id, slug, title, description, image, createdAt, author, category}) => (
+						<motion.div
+				          key={id || slug}
+				          initial={{ opacity: 0, filter: "blur(6px)" }}
+				          animate={{ opacity: 1, filter: "blur(0px)" }}
+				          transition={{ duration: 0.5 }}
+				          className="grid grid-cols-12 gap-4 rounded-md"
+				        >
+				            <Link
+				              to={`/blog/${slug}/${id}`}
+				              className="col-span-3 h-44 object-fit"
+				            >
+				              <img src={image} alt="" className="flex h-full w-full object-cover rounded-md" />
+				            </Link>
+
+
+				            <div className="col-span-9 flex flex-col space-y-4">
+				                <span className="flex items-center flex-row space-x-3">
+				                    <p className="text-sm font-semibold text-amber-500">{category?.title}</p>
+				                </span>
+				                <Link
+					              	to={`/blog/${slug}/${id}`}
+					          	>
+					              <span className="flex flex-col space-y-3">
+					                <p className="text-2xl font-bold text-black">{title}</p>
+					                <p className="text-sm font-normal text-black">{description}</p>
+					                <span className="flex items-center flex-row space-x-3">
+					                  <p className="text-gray-500 text-xs font-semibold">{author?.username} — </p>
+					                  <TimeAgo className="text-gray-500 text-xs font-semibold" date={createdAt} />
+					                </span>
+					              </span>
+				              </Link>
+				            </div>
+				          {/*</div>*/}
+				        </motion.div>
+			      	))
+			    )}
+			</div>		
+			<Footer />
 		</div>
 	)
 }

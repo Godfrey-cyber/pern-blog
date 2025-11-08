@@ -125,16 +125,28 @@ const FrontPage = () => {
 				<div className="flex flex-col items-center justify-center space-y-4">
 					<p className="text-black font-bold p-3">ORIGINAL</p>
 					<div className="flex flex-col space-y-6">
-						{blogs.slice(11, 13).map(blog => (
-							<Link key={blog.id} to={`/blog/${blog.slug}/${blog.id}`}>
-								<span className="front-span">
-									<p className="front-p">{trimString(blog.title, 60)}</p>
-									<p className="front-time text-xs">
-										<TimeAgo className="text-gray-500 text-xs font-semibold" date={blog.createdAt} />
-									</p>
-								</span>
-							</Link>
-						))}
+						{isFetching
+					    ? 
+					      [...Array(2)].map((_, i) => (
+					        <div key={i} className="flex flex-col space-y-2 animate-pulse">
+					          <div className="h-4 w-3/4 rounded skeleton"></div>
+					          <div className="h-3 w-1/2 rounded skeleton"></div>
+					        </div>
+					      ))
+					    : 
+					      blogs.slice(11, 13).map(blog => (
+					        <Link key={blog.id} to={`/blog/${blog.slug}/${blog.id}`}>
+					          <span className="front-span">
+					            <p className="front-p transition duration-300 hover:text-amber-600">
+					              {trimString(blog.title, 60)}
+					            </p>
+					              <TimeAgo
+					              	className="text-gray-500 text-xs font-semibold"
+					                date={blog.createdAt}
+					              />
+					          </span>
+					        </Link>
+					      ))}
 					</div>
 				</div>
 			</div>

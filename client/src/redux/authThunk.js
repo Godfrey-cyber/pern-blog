@@ -24,7 +24,7 @@ export const loginUser = (loginData, navigate, toast) => async dispatch => {
 	} catch (error) {
 		dispatch(loginFailure(error.response?.data?.msg || "Login failed"));
     console.log(error)
-		toast.error(error?.response?.data.error || "Login failed. Try again.");
+		toast.error(error?.response?.data?.error || "Login failed. Try again.");
 	}
 }
 // @User register
