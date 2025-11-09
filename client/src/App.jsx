@@ -34,7 +34,6 @@ function App() {
   const dispatch = useDispatch();
   const { user, loading, error, accessToken, isAuthenticated } = useSelector(state => state.auth);
   const { blog } = useSelector(state => state.blog);
-
   useEffect(() => {
     // On initial load, check if the user is authenticated
     if (isAuthenticated === null || isAuthenticated === undefined) {
@@ -61,7 +60,7 @@ function App() {
           <Route path="/auth/login" element={accessToken ? <LandingPage /> : <Login /> } />
           <Route path="/auth/register" element={accessToken ? <LandingPage /> : <SignUp /> } />
           <Route path="/blog/edit-blog/:slug" element={accessToken ? <EditBlog /> : <Login />} />
-          <Route path="/blog/:username/write" element={accessToken ? <PostBlog /> : <Login />} />
+          <Route path="/blog/username/write" element={<PostBlog /> } />
           <Route path="/blog/:slug/:id" element={<BlogPost />} />
           <Route path="/blogs/:username/dashboard" element={accessToken ? <Dashboard /> : <Login />} />
           <Route path="/auth/forgot-password" element={<ForgotPassword />} />

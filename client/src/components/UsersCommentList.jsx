@@ -1,11 +1,16 @@
 import React from 'react'
 import TimeAgo from "react-timeago";
 import { ThumbsUp, ThumbsDown, Share2 } from 'lucide-react';
+// import CommentSkeleton from "../skeletons/CommentSkeleton.jsx"
+import CommentSkeleton from "./skeletons/CommentSkeleton.jsx"
 
-const UsersCommentList = ({ blog }) => {
+const UsersCommentList = ({ blog, isLoading, isError }) => {
 	return (
 		<div className="flex flex-col space-y-4 w-full lg:w-4/5 my-4 px-5 md:px-10 lg:px-20">
-			{blog?.comments?.map(comment => (
+			{!blog?.comments?.length ? (
+			    <CommentSkeleton />
+			) : (
+			blog?.comments?.map(comment => (
 				<div key={comment.id} className="flex flex-row space-x-3 my-4 w-full">
 					<div className="">
 						<span className="col-span-1 flex flex-col items-center justify-center w-10 h-10 rounded-full bg-gray-200 border-2 border-amber-500 text-sm font-semibold text-gray-400">{comment?.author?.username.split(" ").length === 2 ? comment?.author?.username?.split(" ")[0].charAt(0) : comment?.author?.username?.charAt(0)}{comment?.author?.username.split(" ").length === 2 ? comment?.author?.username?.split(" ")[1].charAt(0) : ""}
@@ -35,7 +40,8 @@ const UsersCommentList = ({ blog }) => {
 						</div>
 					</div>
 				</div>
-			))}
+			))
+  		)}
 		</div>
 	)
 }

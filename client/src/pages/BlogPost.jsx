@@ -27,7 +27,6 @@ const BlogPost = () => {
 	    dispatch(fetchBlogById(id))
 	    window.scrollTo(0, 0)
 	}, [id, dispatch]);
-	console.log(blog)
 	// if (isLoading) return <p>Loading blog...</p>;
 	// if (!blog) return <p className="text-sm font-bold-red-gray-500 w-screen h-screen flex items-center justify-center">Loading</p>
 	return (

@@ -14,7 +14,6 @@ export const logoutUser = () => async dispatch => {
 
 // @User login
 export const loginUser = (loginData, navigate, toast) => async dispatch => {
-  console.log("🔥 LOGIN THUNK CALLED", new Date().toISOString());
 	dispatch(loginStart());
 	try {
 		const res = await axiosInstance.post("/users/login", loginData);
