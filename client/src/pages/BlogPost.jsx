@@ -27,8 +27,6 @@ const BlogPost = () => {
 	    dispatch(fetchBlogById(id))
 	    window.scrollTo(0, 0)
 	}, [id, dispatch]);
-	// if (isLoading) return <p>Loading blog...</p>;
-	// if (!blog) return <p className="text-sm font-bold-red-gray-500 w-screen h-screen flex items-center justify-center">Loading</p>
 	return (
 		<div className="flex flex-col w-full h-screen w-full">
 		 	<BlogHeader />
@@ -37,7 +35,7 @@ const BlogPost = () => {
 					<span className="flex flex-col space-y-1">
 						{!blog || isLoading ? (
 							<div className="animate-pulse">
-								<div className="h-6 w-1/3 rounded-md skeleton mb-3"></div>
+								<div className="h-6 w-1/3 rounded-md skeleton mb-1"></div>
 							</div>
 							) : (
 							<Link to={`/category/${blog?.category?.slug}/${blog?.category?.id}`}>
@@ -47,7 +45,8 @@ const BlogPost = () => {
 
 						{!blog || isLoading ? (
 							<div className="animate-pulse">
-								<div className="h-10 w-1/2 rounded-md skeleton mb-3"></div>
+								<div className="h-10 w-4/5 skeleton mb-1"></div>
+								<div className="h-10 w-3/4 skeleton mb-1"></div>
 							</div>
 							) : (
 							<motion.h2
@@ -95,10 +94,6 @@ const BlogPost = () => {
 					  )}
 					</div>
 					{/* ----- blog ----- */}
-					{/*<div className="flex flex-col space-y-3 text-sm leading-8 font-normal text-gray-800" dangerouslySetInnerHTML={{ __html: blog?.content }} />*/}
-
-
-
 					{isLoading ? (
 				        <div className="space-y-3 my-8">
 				          <div className="h-4 w-full rounded skeleton"></div>
@@ -127,9 +122,6 @@ const BlogPost = () => {
 				          dangerouslySetInnerHTML={{ __html: blog?.content }}
 				        />
 				    )}
-
-
-
 				</div>
 				{/*{------- TRENDING NOW ----------}*/}
 				<div className="hidden md:col-span-3 md:flex flex-col p-4 h-full rounded-md">

@@ -16,7 +16,7 @@ const FrontPage = () => {
 							<span className="flex flex-col space-y-1">
 							{isFetching ? (
 								<div className="animate-pulse">
-									<div className="h-6 w-1/3 skeleton mb-3"></div>
+									<div className="h-6 w-1/3 skeleton mb-2"></div>
 								</div>
 								) : (
 								<Link to={`/category/${blogs[0]?.category?.slug}/${blogs[0]?.category?.id}`}>
@@ -25,7 +25,8 @@ const FrontPage = () => {
 							)}
 								{isFetching ? (
 								<div className="animate-pulse">
-									<div className="h-10 w-1/2 skeleton mb-3"></div>
+									<div className="h-10 w-4/5 skeleton mb-2"></div>
+									<div className="h-10 w-3/4 skeleton mb-2"></div>
 								</div>
 								) : (
 									<p className="text-3xl font-bold text-black hover:text-amber-500">{blogs[0]?.title}</p>
