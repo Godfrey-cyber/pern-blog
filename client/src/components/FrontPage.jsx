@@ -7,6 +7,8 @@ import { Link } from "react-router-dom"
 
 const FrontPage = () => {
 	const { blogs, isFetching } = useSelector(state => state.blogs)
+	console.log(blogs)
+	console.log(import.meta.env.VITE_API_URL)
 	return (
 		<div className="front-1">
 			<div className="front-2">

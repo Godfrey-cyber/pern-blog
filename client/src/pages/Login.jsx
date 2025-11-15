@@ -31,10 +31,8 @@ const Login = () => {
 	const resetForm = () => setLoginData({ email: "", password: "" });
 
 	const handleSubmit = (event) => {
-		console.log("🚀 handleSubmit called");
 		event.preventDefault();
 		if (email && password) {
-			 console.log("✅ Dispatching loginUser");
 		    dispatch(loginUser({ email, password }, navigate, toast));
 		    resetForm();
 	  	} else {

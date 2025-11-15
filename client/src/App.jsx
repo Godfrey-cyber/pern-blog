@@ -12,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 // pages
 import LandingPage from "./pages/LandingPage.jsx"
+import CountyRevenueSystem from "./pages/DummyPage.jsx"
 import Login from "./pages/Login.jsx"
 import SignUp from "./pages/SignUp.jsx"
 import EditBlog from "./pages/EditBlog.jsx"
@@ -22,6 +23,7 @@ import MyBlogs from "./pages/MyBlogs.jsx"
 import Categories from "./pages/Categories.jsx"
 import ForgotPassword from "./pages/ForgotPassword.jsx"
 import TestPage from "./pages/TestPage.jsx"
+import NotFound404Page from "./pages/NotFound404Page.jsx"
 
 import { useDispatch, useSelector } from 'react-redux';
 // import { currentUser, refreshToken } from './redux/userSlice.js';
@@ -50,6 +52,7 @@ function App() {
   useEffect(() => {
     dispatch(fetchCategories());
   }, [])
+  console.log(user)
 
   return (
     <section className="min-h-screen font-['Montserrat'] scroll-smooth w-full overflow-x-hidden">
@@ -68,6 +71,8 @@ function App() {
           <Route path="/dashboard/blogs/blog-list" element={<MyBlogs />} />
           <Route path="/category/:slug/:id" element={<Categories />} />
           <Route path="/blogs/function" element={<TestPage />} />
+          <Route path="/county" element={user && user.role === "ADMIN" ? <CountyRevenueSystem /> : <NotFound404Page />} />
+          <Route path="*" element={<NotFound404Page />} />
         </Routes>
       </BrowserRouter>
     </section>
