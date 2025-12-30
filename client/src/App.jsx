@@ -24,6 +24,7 @@ import Categories from "./pages/Categories.jsx"
 import ForgotPassword from "./pages/ForgotPassword.jsx"
 import TestPage from "./pages/TestPage.jsx"
 import NotFound404Page from "./pages/NotFound404Page.jsx"
+import ReactChatUI from "./pages/ReactChatUI.jsx"
 
 import { useDispatch, useSelector } from 'react-redux';
 // import { currentUser, refreshToken } from './redux/userSlice.js';
@@ -70,8 +71,9 @@ function App() {
           <Route path="/dashboard/auth/forgot-password" element={<ForgotPassword />} />
           <Route path="/dashboard/blogs/blog-list" element={<MyBlogs />} />
           <Route path="/category/:slug/:id" element={<Categories />} />
-          <Route path="/blogs/function" element={<TestPage />} />
+          <Route path="/blogs/function" element={user && user.role === "ADMIN" ? <TestPage /> : <NotFound404Page />} />
           <Route path="/county" element={user && user.role === "ADMIN" ? <CountyRevenueSystem /> : <NotFound404Page />} />
+          <Route path="/chat" element={<ReactChatUI />} />
           <Route path="*" element={<NotFound404Page />} />
         </Routes>
       </BrowserRouter>
