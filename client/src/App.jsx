@@ -30,20 +30,26 @@ import { useDispatch, useSelector } from 'react-redux';
 // import { currentUser, refreshToken } from './redux/userSlice.js';
 import { loginSuccess, getCurrentUserSuccess, loginFailure, logout } from './redux/userSlice.js';
 import { axiosInstance } from './utilities/utiles.js';
-import { refreshUser } from "./redux/authThunk.js"
+import { refreshUser, initializeAuth } from "./redux/authThunk.js"
 import { fetchBlogs, fetchCategories } from "./redux/blogThunk.js"
 
 function App() {
   const dispatch = useDispatch();
+  const [isloading, setisLoading] = useState(true);
   const { user, loading, error, accessToken, isAuthenticated } = useSelector(state => state.auth);
   const { blog } = useSelector(state => state.blog);
+
   useEffect(() => {
     // On initial load, check if the user is authenticated
-    if (isAuthenticated === null || isAuthenticated === undefined) {
+    // if (isAuthenticated === null || isAuthenticated === undefined) {
       dispatch(refreshUser());
-    }
+      // dispatch(initializeAuth());
+      // dispatch(loginUser({ email, password }, navigate, toast));
+    // }
   }, [dispatch]);
 
+   console.log(user)
+   console.log(isAuthenticated)
   // fetch All blogs on page load
   useEffect(() => {
     dispatch(fetchBlogs());
@@ -53,7 +59,10 @@ function App() {
   useEffect(() => {
     dispatch(fetchCategories());
   }, [])
-  console.log(user)
+
+  // if (loading) {
+  //   return <div className="h-screen w-full flex items-center justify-center">Loading...</div>; // Or a proper loading component
+  // }
 
   return (
     <section className="min-h-screen font-['Montserrat'] scroll-smooth w-full overflow-x-hidden">

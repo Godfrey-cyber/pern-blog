@@ -55,3 +55,25 @@ export const refreshUser = () => async dispatch => {
     dispatch(getCurrentUserFailure("Session expired. Please log in again."));
   }
 };
+
+export const initializeAuth = () => async (dispatch, getState) => {
+  dispatch(loginStart());
+  console.log(getState().auth)
+  try {
+    const { auth } = getState();
+    // Try to refresh token using the httpOnly cookie
+    if (auth.user || auth.accessToken) {
+      const response = await axiosInstance.get('/users/refresh');
+      dispatch(loginSuccess(response.data));
+    } else {
+      dispatch(setInitialized());
+    }
+    
+  } catch (error) {
+    // If refresh fails, user stays logged out
+    // dispatch(loginFailure(error.response?.data?.msg || "Login failed"));
+    dispatch(logout());
+  }
+};
+
+
