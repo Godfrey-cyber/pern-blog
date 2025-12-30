@@ -12,7 +12,6 @@ import { axiosInstance } from "../utilities/utiles.js"
 import { loginUser } from "../redux/authThunk.js"
 
 const Login = () => {
-	console.log("🔄 Login component rendered");
 	const navigate = useNavigate();
 	const [loginData, setLoginData] = useState({
 		email: '',
@@ -30,7 +29,6 @@ const Login = () => {
 		const { name, value } = event.target;
 		setLoginData((prev) => ({ ...prev, [name]: value }));
 	};
-	console.log(user)
 	const resetForm = () => setLoginData({ email: "", password: "" });
 
 	const handleSubmit = (event) => {
