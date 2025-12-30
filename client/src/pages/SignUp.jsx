@@ -115,9 +115,9 @@ const Register = () => {
 	          <div className="absolute inset-0 bg-black opacity-20"></div>
 	          <div className="absolute inset-0 flex items-center justify-center p-12">
 	            <div className="text-white max-w-2xl">
-	              <h1 className="text-5xl font-bold mb-6">Welcome Back.</h1>
+	              <h1 className="text-5xl font-bold mb-6">Welcome.</h1>
 	              <p className="text-xl text-gray-100 leading-relaxed">
-	                Login in and continue your journey with us. Experience seamless access to all your favorite blog topics.
+	                Register and continue your journey with us. Experience seamless access to all your favorite blog topics.
 	              </p>
 	              <div className="mt-12 grid grid-cols-3 gap-8">
 	                <div className="text-start">
@@ -142,7 +142,7 @@ const Register = () => {
         <div className="w-full max-w-md">
           <div className="mb-10">
             <h2 className="text-3xl font-bold text-gray-900 mb-2">Sign Up</h2>
-            <p className="text-gray-600">Creae an account and explore blogs from all topics of life.</p>
+            <p className="text-gray-600">Create an account and explore blogs from all topics of life.</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -268,7 +268,7 @@ const Register = () => {
           <span className="mt-8 text-center text-sm text-gray-600">
             Already have an account?{' '}
             
-            <Link to="/auth/register">
+            <Link to="/auth/login">
 				<span className="text-sm cursor-pointer text-green-600 transition-all delay-200 ml-2">
 				Login here.
 				</span>
