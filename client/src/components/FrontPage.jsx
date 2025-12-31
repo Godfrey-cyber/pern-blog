@@ -19,8 +19,8 @@ const FrontPage = () => {
 									<div className="h-6 w-1/3 skeleton mb-2"></div>
 								</div>
 								) : (
-								<Link to={`/category/${blogs?.blogs?.slice(0, 1)[0]?.category?.slug}/${blogs?.blogs?.slice(0, 1)[0]?.category?.id}`}>
-									<p className="text-sm font-semibold text-green-700 hover:text-green-500">{blogs?.blogs?.slice(0, 1)[0]?.category?.title}</p>
+								<Link to={`/category/${blogs[0]?.category?.slug}/${blogs[0]?.category?.id}`}>
+									<p className="text-sm font-semibold text-green-700 hover:text-green-500">{blogs[0]?.category?.title}</p>
 								</Link>
 							)}
 								{isFetching ? (
@@ -29,14 +29,14 @@ const FrontPage = () => {
 									<div className="h-10 w-3/4 skeleton mb-2"></div>
 								</div>
 								) : (
-									<p className="text-3xl font-bold text-black hover:text-amber-500">{blogs?.blogs?.slice(0, 1)[0]?.title}</p>
+									<p className="text-3xl font-bold text-black hover:text-amber-500">{blogs?.title}</p>
 								)}
 							</span>
 							{isFetching ? (
 								<span className="h-80 min-h-[400px] max-h-[450px] rounded-lg skeleton mb-2"></span>
 								) : (
-								<Link to={`/blog/${blogs?.blogs?.slice(0, 1)[0]?.slug}/${blogs?.blogs?.slice(0, 1)[0]?.id}`}>
-									{blogs?.blogs?.slice(0, 1)[0] && <img src={blogs?.blogs?.slice(0, 1)[0]?.image} alt="" className="h-80 min-h-[400px] max-h-[450px] object-cover" />}
+								<Link to={`/blog/${blogs[0]?.slug}/${blogs[0]?.id}`}>
+									{blogs[0] && <img src={blogs[0]?.image} alt="" className="h-80 min-h-[400px] max-h-[450px] object-cover" />}
 								</Link>
 							)}
 						</div>
@@ -54,7 +54,7 @@ const FrontPage = () => {
 						      ))
 						    ) : (
 							// ✅ Actual blog list once loaded
-						      blogs?.blogs?.slice(1, 5).map((blog, index) => (
+						      blogs?.slice(1, 5).map((blog, index) => (
 						        <Link key={blog.id} to={`/blog/${blog.slug}/${blog.id}`}>
 						          <span className="front-span">
 						            <motion.p
@@ -100,7 +100,7 @@ const FrontPage = () => {
 					    ))
 					  ) : (
 					  	// ✅ Real blog cards once loaded
-					    blogs?.blogs?.slice(6, 9).map((blog, index) => (
+					    blogs?.slice(6, 9).map((blog, index) => (
 					      <Link key={blog.id} to={`/blog/${blog.slug}/${blog.id}`}>
 					        <motion.span
 					          className="flex flex-col space-y-2 w-52 md:w-72 h-full cursor-pointer"
@@ -135,7 +135,7 @@ const FrontPage = () => {
 					        </div>
 					      ))
 					    : 
-					      blogs?.blogs?.slice(11, 13).map(blog => (
+					      blogs?.slice(11, 13).map(blog => (
 					        <Link key={blog.id} to={`/blog/${blog.slug}/${blog.id}`}>
 					          <span className="front-span">
 					            <p className="front-p transition duration-300 hover:text-amber-600">

@@ -37,7 +37,7 @@ const Feed = () => {
 		        </div>
 		      ))
 		    : 
-		      blogs?.blogs?.slice(14, 20).map(({ id, slug, createdAt, title, description, image, category }) => (
+		      blogs?.slice(14, 20).map(({ id, slug, createdAt, title, description, image, category }) => (
 		        <motion.div
 		          key={id || slug}
 		          initial={{ opacity: 0, filter: "blur(6px)" }}
