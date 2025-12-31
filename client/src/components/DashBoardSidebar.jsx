@@ -15,12 +15,14 @@ const DashBoardSidebar = () => {
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'posts', label: 'All Posts', icon: FileText },
     { id: 'create', label: 'Create Post', icon: PenSquare },
+    { id: 'edit', label: 'Edit Post', icon: PenSquare },
     { id: 'media', label: 'Media Library', icon: Image },
     { id: 'categories', label: 'Categories', icon: Folder },
     { id: 'tags', label: 'Tags', icon: Tag },
     { id: 'comments', label: 'Comments', icon: MessageSquare },
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
     { id: 'users', label: 'Users', icon: Users },
+    { id: 'notifications', label: 'Notifications', icon: Bell },
   ];
 
   const renderContent = () => {
@@ -31,6 +33,8 @@ const DashBoardSidebar = () => {
         return <AllPostsPage darkMode={darkMode} />;
       case 'create':
         return <CreatePostPage darkMode={darkMode} />;
+      // case 'edit':
+      //   return <EditBlog darkMode={darkMode} />;
       case 'media':
         return <MediaLibraryPage darkMode={darkMode} />;
       case 'categories':

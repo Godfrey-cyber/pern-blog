@@ -9,7 +9,10 @@ import TimeAgo from "react-timeago";
 
 const RecentDashBlogs = ({ darkMode }) => {
 	const { blogs } = useSelector(state => state.blogs)
+  const { categories } = useSelector(state => state.category)
 	const { user } = useSelector(state => state.auth)
+  console.log(blogs)
+  console.log(categories)
 
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	  const [showEditModal, setShowEditModal] = useState(false);
@@ -17,12 +20,13 @@ const RecentDashBlogs = ({ darkMode }) => {
 	  const [postToEdit, setPostToEdit] = useState(null);
 	  const [editForm, setEditForm] = useState({
 	    title: '',
-	    excerpt: '',
-	    category: '',
-	    status: 'Draft'
+	    description: '',
+      category: '',
+	    image: '',
+      content: '',
 	  });
-	  const [blogPosts, setBlogPosts] = useState(blogs)
-	const post = blogs[0]
+	  const [blogPosts, setBlogPosts] = useState(blogs.blogs)
+	const post = blogs
 
 	const dashboardStats = [
 	    { label: "Total Views", value: "45,231", icon: Eye, change: "+12.5%", trend: "up" },
@@ -47,17 +51,18 @@ const RecentDashBlogs = ({ darkMode }) => {
     setPostToEdit(post);
     setEditForm({
       title: post.title,
-      excerpt: post.excerpt,
+      description: post.description,
       category: post.category,
-      status: post.status
+      content: post.content,
+      image: post.image,
     });
     setShowEditModal(true);
   };
 
-  const handleEditChange = (e) => {
+  const handleEditChange = (event) => {
     setEditForm({
       ...editForm,
-      [e.target.name]: e.target.value
+      [event.target.name]: event.target.value
     });
   };
 
@@ -71,8 +76,15 @@ const RecentDashBlogs = ({ darkMode }) => {
     setPostToEdit(null);
   };
 
+  const handleContentChange = (value) => {
+    setEditForm((prev) => ({
+      ...prev,
+      content: value,
+      }));
+  };
+
   const DeleteModal = () => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-scroll">
       <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 animate-fade-in">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-xl font-bold text-gray-900">Confirm Delete</h3>
@@ -105,8 +117,8 @@ const RecentDashBlogs = ({ darkMode }) => {
   );
   // Edit Modal Component
   const EditModal = () => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full p-6 my-8">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-end z-50">
+      <div className="bg-white shadow-lg w-full md:w-1/2 h-full md:h-screen p-6 flex flex-col overflow-y-scroll">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-2xl font-bold text-gray-900">Edit Post</h3>
           <button onClick={() => setShowEditModal(false)} className="text-gray-400 hover:text-gray-600">
@@ -115,6 +127,7 @@ const RecentDashBlogs = ({ darkMode }) => {
         </div>
         
         <form className="space-y-5">
+          {/* ==================================== Title ==================================== */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
               Title
@@ -125,11 +138,25 @@ const RecentDashBlogs = ({ darkMode }) => {
               value={editForm.title}
               onChange={handleEditChange}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-              placeholder="Enter post title"
+              placeholder="Enter blog title"
             />
           </div>
-
+          {/* ==================================== Description ==================================== */}
           <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Title
+            </label>
+            <input
+              type="text"
+              name="description"
+              value={editForm.description}
+              onChange={handleEditChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              placeholder="Enter blog description"
+            />
+          </div>
+          {/* ==================================== Content ==================================== */}
+          {/*<div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
               Content
             </label>
@@ -141,35 +168,55 @@ const RecentDashBlogs = ({ darkMode }) => {
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               placeholder="Enter post content"
             />
+          </div>*/}
+
+
+          <div className="flex-1 h-72 overflow-y-scroll">
+            <ReactQuill
+              theme="snow"
+              name="content"
+              value={editForm.content}
+              onChange={handleContentChange}
+              placeholder="Write your blog content here..."
+              // className="h-[300px] md:h-[400px]"
+              className="h-fit "
+            />
           </div>
 
+
+          {/* ==================================== Category ==================================== */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Category
               </label>
               <select
-                name="category"
+                name="id"
                 value={editForm.category}
                 onChange={handleEditChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-              >
-              {/*{edit}*/}
-                <option value="Web Development">Web Development</option>
-                <option value="Design">Design</option>
-                <option value="Backend">Backend</option>
-                <option value="Programming">Programming</option>
-                <option value="DevOps">DevOps</option>
+                className={`w-full px-4 py-3 rounded-lg border ${
+                      darkMode 
+                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                        : 'bg-white border-gray-300 text-gray-900'
+                    } focus:outline-none focus:ring-2 focus:ring-purple-500`}
+                required
+                >
+                <option value="">-- Select Category --</option>
+                {categories?.map((cat) => (
+                      <option key={cat.id} value={cat.id}>
+                        {cat.title}
+                    </option>
+                ))}
               </select>
             </div>
 
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Status
+                {/* ==================================== Image ==================================== */}
               </label>
               <select
-                name="status"
-                value={editForm.status}
+                name="image"
+                value={editForm.image}
                 onChange={handleEditChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
@@ -204,8 +251,7 @@ const RecentDashBlogs = ({ darkMode }) => {
 	return (
 		<>
 			<div className="min-h-screen bg-gray-50 px-5">
-			    
-	        	{/* Recent Posts Table */}
+			    	{/* Recent Posts Table */}
 		        <div className=" rounded-lg shadow-md overflow-hidden mb-8">
 		          <div className="p-6 border-b">
 		            <h2 className="text-xl font-bold text-gray-900">Recent Posts</h2>
@@ -271,21 +317,21 @@ const RecentDashBlogs = ({ darkMode }) => {
 		                        <button
 		                        	onClick={() => handleEditClick(post)} 
 		                        	className="text-blue-600 hover:text-blue-800 cursor-pointer"
-		                        	title="Edit post"
+		                        	title="Edit blog"
 		                        	>
 		                          	<Edit className="w-4 h-4" />
 		                        </button>
 		                        <button 
 		                        	onClick={() => setCurrentPage('single')}
 		                        	className="text-green-600 hover:text-green-800 cursor-pointer"
-		                        	title="View post"
+		                        	title="View blog"
 		                        >
 		                          <Eye className="w-4 h-4" />
 		                        </button>
 		                        <button 
 		                        	onClick={() => handleDeleteClick(post)}
 		                         	className="text-red-600 hover:text-red-800 cursor-pointer"
-		                         	title="Delete post"
+		                         	title="Delete blog"
 		                         	>
 		                          <Trash2 className="w-4 h-4" />
 		                        </button>
@@ -298,7 +344,7 @@ const RecentDashBlogs = ({ darkMode }) => {
 		          </div>
 		        </div>
 		        {showDeleteModal && <DeleteModal />}
-      			{showEditModal && <EditModal />}
+      			{showEditModal && <EditModal setShowEditModal={setShowEditModal} handleEditChange={handleEditChange} editForm={editForm} saveEdit={saveEdit} />}
 		        <div className="bg-white rounded-lg shadow-md p-6">
 		          <h2 className="text-xl font-bold text-gray-900 mb-4">Analytics Overview</h2>
 		          <div className="h-64 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg flex items-center justify-center">

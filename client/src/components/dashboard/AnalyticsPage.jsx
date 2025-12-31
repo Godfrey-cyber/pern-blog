@@ -1,8 +1,9 @@
-import { BarChart3, Eye } from 'lucide-react'; 
 import React, { useState } from 'react';
+import { Users, BarChart3, Eye, Clock  } from 'lucide-react';
 
 
 const AnalyticsPage = ({ darkMode }) => {
+  // User
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">

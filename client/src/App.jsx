@@ -48,8 +48,6 @@ function App() {
     // }
   }, [dispatch]);
 
-   console.log(user)
-   console.log(isAuthenticated)
   // fetch All blogs on page load
   useEffect(() => {
     dispatch(fetchBlogs());
@@ -80,8 +78,8 @@ function App() {
           <Route path="/dashboard/auth/forgot-password" element={<ForgotPassword />} />
           <Route path="/dashboard/blogs/blog-list" element={<MyBlogs />} />
           <Route path="/category/:slug/:id" element={<Categories />} />
-          <Route path="/blogs/function" element={user && user.role === "ADMIN" ? <TestPage /> : <NotFound404Page />} />
-          <Route path="/county" element={user && user.role === "ADMIN" ? <CountyRevenueSystem /> : <NotFound404Page />} />
+          <Route path="/blogs/function" element={<TestPage />} />
+          <Route path="/county" element={<CountyRevenueSystem />} />
           <Route path="/chat" element={<ReactChatUI />} />
           <Route path="*" element={<NotFound404Page />} />
         </Routes>

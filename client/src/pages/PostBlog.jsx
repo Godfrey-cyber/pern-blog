@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Users, MapPin, X, Plus, Minus, DollarSign, Compass, Search } from 'lucide-react';
+import TimeAgo from "react-timeago";
 
 export default function TourBookingForm() {
   const [destination, setDestination] = useState('');

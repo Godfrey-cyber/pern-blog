@@ -27,12 +27,13 @@ const BlogPost = () => {
 	    dispatch(fetchBlogById(id))
 	    window.scrollTo(0, 0)
 	}, [id, dispatch]);
+	console.log(blogs.blogs)
 	return (
 		<div className="flex flex-col w-full h-screen w-full">
 		 	<BlogHeader />
 			<div className="grid grid-cols-12 gap-4 lg:gap-8 px-5 md:px-10 lg:px-20 mt-20">
 				<div className="col-span-12 md:col-span-8 flex flex-col space-y-4">
-					<span className="flex flex-col space-y-1">
+					<div className="flex flex-col space-y-1">
 						{!blog || isLoading ? (
 							<div className="animate-pulse">
 								<div className="h-6 w-1/3 rounded-md skeleton mb-1"></div>
@@ -58,7 +59,7 @@ const BlogPost = () => {
 					          >{blog?.title}
 					        </motion.h2>
 						)}						
-					</span>
+					</div>
 					{!blog || isLoading ? (
 						<span className="h-80 min-h-[400px] max-h-[450px] skeleton mb-3"></span>
 						) : (
@@ -82,48 +83,53 @@ const BlogPost = () => {
 					      <span className="flex flex-col items-center justify-center w-10 h-10 rounded-full bg-gray-200 border-2 border-amber-500 text-lg font-semibold text-gray-400">
 					        {blog?.author?.username?.split(" ")[0].charAt(0)}
 					      </span>
-					      <span className="flex flex-col space-y-1">
+					      <div className="flex flex-col space-y-1">
 					        <p className="text-gray-700 font-semibold text-xs">
 					          By {blog?.author?.username}
 					        </p>
-					        <p className="text-gray-700 font-semibold text-xs">
-					          Published on {blog && formatDate(blog?.createdAt)}
-					        </p>
-					      </span>
+					        <span className="flex items-center space-x-2 text-gray-500 text-xs font-semibold">
+					          	<p className="text-gray-700 font-semibold text-xs">Published</p>
+						        <TimeAgo
+					                className="text-gray-500 text-xs font-semibold"
+					                date={blog?.createdAt}
+					            />
+					            
+				            </span>
+					      </div>
 					    </>
 					  )}
 					</div>
-					{/* ----- blog ----- */}
-					{isLoading ? (
-				        <div className="space-y-3 my-8">
-				          <div className="h-4 w-full rounded skeleton"></div>
-				          <div className="h-4 w-11/12 rounded skeleton"></div>
-				          <div className="h-4 w-10/12 rounded skeleton"></div>
-				          <div className="h-4 w-3/4 rounded skeleton"></div>
-				          <div className="h-4 w-4/5 rounded skeleton"></div>
-				          <div className="h-4 w-4/5 rounded skeleton"></div>
-				          <div className="h-4 w-10/12 rounded skeleton"></div>
-				          <div className="h-4 w-10/12 rounded skeleton"></div>
-				          <div className="h-4 w-3/4 rounded skeleton"></div>
-				          <div className="h-4 w-11/12 rounded skeleton"></div>
-				          <div className="h-4 w-10/12 rounded skeleton"></div>
-				          <div className="h-4 w-3/4 rounded skeleton"></div>
-				          <div className="h-4 w-4/5 rounded skeleton"></div>
-				          <div className="h-4 w-4/5 rounded skeleton"></div>
-				          <div className="h-4 w-10/12 rounded skeleton"></div>
-				          <div className="h-4 w-10/12 rounded skeleton"></div>
-				        </div>
-				      ) : (
-				        <motion.div
-				          className="flex flex-col space-y-3 text-sm leading-8 font-normal text-gray-800 leading-relaxed"
-				          initial={{ opacity: 0, y: 10 }}
-				          animate={{ opacity: 1, y: 0 }}
-				          transition={{ duration: 0.6 }}
-				          dangerouslySetInnerHTML={{ __html: blog?.content }}
-				        />
-				    )}
-				</div>
-				{/*{------- TRENDING NOW ----------}*/}
+				{/*</div> */}
+				
+				{isLoading ? (
+			        <div className="space-y-3 my-8">
+			          <div className="h-4 w-full rounded skeleton"></div>
+			          <div className="h-4 w-11/12 rounded skeleton"></div>
+			          <div className="h-4 w-10/12 rounded skeleton"></div>
+			          <div className="h-4 w-3/4 rounded skeleton"></div>
+			          <div className="h-4 w-4/5 rounded skeleton"></div>
+			          <div className="h-4 w-4/5 rounded skeleton"></div>
+			          <div className="h-4 w-10/12 rounded skeleton"></div>
+			          <div className="h-4 w-10/12 rounded skeleton"></div>
+			          <div className="h-4 w-3/4 rounded skeleton"></div>
+			          <div className="h-4 w-11/12 rounded skeleton"></div>
+			          <div className="h-4 w-10/12 rounded skeleton"></div>
+			          <div className="h-4 w-3/4 rounded skeleton"></div>
+			          <div className="h-4 w-4/5 rounded skeleton"></div>
+			          <div className="h-4 w-4/5 rounded skeleton"></div>
+			          <div className="h-4 w-10/12 rounded skeleton"></div>
+			          <div className="h-4 w-10/12 rounded skeleton"></div>
+			        </div>
+			      ) : (
+			        <motion.div
+			          className="flex flex-col space-y-3 text-sm leading-8 font-normal text-gray-800 leading-relaxed"
+			          initial={{ opacity: 0, y: 10 }}
+			          animate={{ opacity: 1, y: 0 }}
+			          transition={{ duration: 0.6 }}
+			          dangerouslySetInnerHTML={{ __html: blog?.content }}
+			        />
+			    )}
+				 </div>
 				<div className="hidden md:col-span-3 md:flex flex-col p-4 h-full rounded-md">
 					<div className="col-span-3 flex flex-col p-4 h-full rounded-md">
 						<p className="text-black font-bold p-3">TRENDING NOW</p>
@@ -137,7 +143,7 @@ const BlogPost = () => {
 						        </div>
 						      ))
 						    ) : (
-						    blogs.slice(1, 5).map((blog, index) => (
+						    blogs?.blogs?.slice(1, 5).map((blog, index) => (
 						        <Link key={blog.id} to={`/blog/${blog.slug}/${blog.id}`}>
 						          <span className="front-span">
 						            <motion.p

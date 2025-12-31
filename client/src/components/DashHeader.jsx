@@ -23,6 +23,7 @@ const DashSideBar = ({ activeMenu, darkMode, menuItems }) => {
             {activeMenu === 'dashboard' && `Welcome back, ${user?.username?.split(" ")[0]}! Here's what's happening today.`}
             {activeMenu === 'posts' && 'Manage all your blog posts here.'}
             {activeMenu === 'create' && 'Create a new blog post.'}
+            {activeMenu === 'edit' && 'Edit an existing blog post.'}
             {activeMenu === 'media' && 'Upload and manage your media files.'}
             {activeMenu === 'categories' && 'Organize your content with categories.'}
           </p>
