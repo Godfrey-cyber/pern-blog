@@ -143,7 +143,7 @@ const BlogPost = () => {
 						        </div>
 						      ))
 						    ) : (
-						    blogs?.blogs?.slice(1, 5).map((blog, index) => (
+						    blogs?.slice(1, 5).map((blog, index) => (
 						        <Link key={blog.id} to={`/blog/${blog.slug}/${blog.id}`}>
 						          <span className="front-span">
 						            <motion.p
