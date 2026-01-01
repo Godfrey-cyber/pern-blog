@@ -50,11 +50,6 @@ export const createBlog = async (req, res, next) => {
       redisClient.del(cacheCategoryBlogs),
       redisClient.set(`blog:${blog.id}`, JSON.stringify(blog), 'EX', 3600)
     ]);
-    // await redisClient.set(`blog:${newBlog.id}`, JSON.stringify(newBlog), 'EX', 3600);
-    // await publisher.publish("blog-events", JSON.stringify({
-    //   type: "NEW_BLOG",
-    //   blog,
-    // }));
     return successResponse(res, 201, "Blog created successfully", blog)
   } catch (error) {
     next(error)
@@ -67,53 +62,38 @@ export const blogs = async (req, res, next) => {
   const cacheKey = query
     ? `blogs:search:${query.toLowerCase()}`
     : "blogs:all";
-  const cacheKeyRecent = "blogs:recent";
   try {
     const cachedBlogs = await redisClient.get(cacheKey);
     if (cachedBlogs) {
-      const blogs = JSON.parse(cachedBlogs);
-      return successResponse(res, 200, "Blog successfully fetched (from cache)", blogs);
+      return successResponse(res, 200, "Blog successfully fetched (from cache)", JSON.parse(cachedBlogs));
     }
-    let blogs;
-    if (query && query.trim() !== "") {
-      blogs = await prisma.blog.findMany({
-        where: {
-          OR: [
-              { title: { contains: query, mode: "insensitive" } },
-              { description: { contains: query, mode: "insensitive" } },
-              {
-                author: {
-                  username: { contains: query, mode: "insensitive" },
-                },
+    const condition = query && query.trim() !== ""
+      ? {
+        OR: [
+            { title: { contains: query, mode: "insensitive" } },
+            { description: { contains: query, mode: "insensitive" } },
+            {
+              author: {
+                username: { contains: query, mode: "insensitive" },
               },
-              {
-                category: {
-                  title: { contains: query, mode: "insensitive" },
-                },
+            },
+            {
+              category: {
+                title: { contains: query, mode: "insensitive" },
               },
-            ],
-          },
-          orderBy: { createdAt: "desc" },
-        include: {
-          author: { select: { id: true, username: true } },
-          category: { select: { title: true } },
-        },
-        take: 10,
-      });
-    } else {
-      blogs = await prisma.blog.findMany({
+            },
+          ],
+        }
+        : {};
+    const blogs = await prisma.blog.findMany({
+        where: condition,
         orderBy: { createdAt: "desc" },
-        take: 21,
+        take: query ? 10 : 21,
         include: {
           author: { select: { id: true, username: true } },
           category: { select: { title: true } },
         },
-      });
-    }
-
-    if (!blogs || blogs.length === 0) {
-      return errorResponse(res, 404, "No blogs found");
-    }
+      })
 
     await redisClient.set(
       cacheKey,
@@ -121,29 +101,6 @@ export const blogs = async (req, res, next) => {
       "EX",
       query ? 600 : 60
     );
-
-
-    // const blogs = query ? await prisma.blog.findMany({
-    //   where: { title: { contains: query, mode: "insensitive" } }
-    //   orderBy: { createdAt: "desc" },
-    //   take: 21,
-    //   include: { 
-    //     id: true,
-    //     title: true,
-    //     slug: true
-    //     author: {
-    //       select: {
-    //         id: true,
-    //         username: true,
-    //       }
-    //     },
-    //     category: { select: { title: true, id: true, slug: true } }, // 
-    //   },
-    // });
-    // if (!blogs || blogs.length === 0) {
-    //   return errorResponse(res, 404, "Blogs not found")
-    // }
-    // await redisClient.set(cacheKey, JSON.stringify(blogs), "EX", 120);
     return successResponse(res, 200, query ? "Blogs search results" : "Blogs successfully fetched 🪄", blogs)
   } catch (error) {
     next(error)

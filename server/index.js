@@ -65,6 +65,6 @@ const PORT = process.env.PORT || 3000 || process.env.npm_package_config_port;
 
 console.log(PORT)
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Success 💯! Servers running on port: ${PORT} 📡`)
 });
