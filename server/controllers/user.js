@@ -42,7 +42,7 @@ export const login = async (req, res, next) => {
       path: '/',
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,  // 7 days in ms
-      sameSite: 'Strict',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
       secure: process.env.NODE_ENV === 'production',
     })
     console.log("➡️ Before res.json, headersSent =", res.headersSent);
@@ -88,7 +88,7 @@ export const logout = async (req, res, next) => {
     res.clearCookie("refreshToken", {
       path: "/",
       httpOnly: true,
-      sameSite: "Strict",
+      sameSite: "strict",
       secure: process.env.NODE_ENV === "production",
     });
 
@@ -134,7 +134,7 @@ export const refresh = async(req, res, next) => {
       path: "/",
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      sameSite: "Strict",
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
       secure: process.env.NODE_ENV === "production",
     });
 
