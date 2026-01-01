@@ -24,7 +24,7 @@ app.use(express.json())
 app.use(sessionMiddleware)
 app.use(cookieParser())
 
-const allowedOrigins = ['https://pern-blog-kappa.vercel.app', 'http://localhost:5500']
+const allowedOrigins = ['https://pern-blog-production.up.railway.app/api/v1', 'http://localhost:5500']
 
 app.use(
   cors({

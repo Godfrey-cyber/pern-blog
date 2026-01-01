@@ -26,6 +26,8 @@ publisher.on("connect", () => console.log("Redis Publisher Connected"));
 subscriber.on("connect", () => console.log("Redis Subscriber Connected"));
 redisClient.on("connect", () => console.log("Redis Client Connected"));
 
+// redis.on("close", () => console.log("Redis disconnected, retrying..."));
+
 process.on("SIGINT", async () => {
   console.log("Closing Redis connections...");
   await Promise.all([
